@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>jQuery UI Example Page</title>
+<link type="text/css" href="css/blitzer/jquery-ui-1.8.4.custom.css"
+	rel="stylesheet" />
+<link type="text/css" href="demos1.css"
+	rel="stylesheet" />
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.4.custom.min.js"></script>
+<script type="text/javascript">
+			$(function(){
+				
+				//hover states on the static widgets
+				$(' ul#icons li').hover(
+					function() { $(this).addClass('ui-state-hover'); }, 
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+				
+			});
+		</script>
+
+<script type="text/javascript">
+	$(function() {
+		$(".delete button").button({
+            icons: {
+                primary: 'ui-icon ui-icon-circle-close'
+            },
+            text: false
+        });
+        $(".add button").button({
+            icons: {
+                primary: 'ui-icon ui-icon-circle-plus'
+            },
+            text: false
+        });
+	});
+	</script>
+
+<style type="text/css">
+/*demo page css*/
+ul#icons li {
+	margin: 2px;
+	position: relative;
+	padding: 4px 0;
+	cursor: pointer;
+	float: left;
+	list-style: none;
+}
+
+ul#icons span.ui-icon {
+	float: left;
+	margin: 0 4px;
+}
+</style>
+</head>
+<body>
+<h1>Welcome to jQuery UI!</h1>
+
+
+<h2 class="demoHeaders">Framework Icons (content color preview)</h2>
+<ul id="icons" class="ui-widget ui-helper-clearfix">
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-plus"><span
+		class="ui-icon ui-icon-plus"></span></li>
+
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-plusthick"><span
+		class="ui-icon ui-icon-plusthick"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-close"><span
+		class="ui-icon ui-icon-close"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-closethick"><span
+		class="ui-icon ui-icon-closethick"></span></li>
+	<li class="ui-state-default ui-corner-all" title=".ui-icon-circle-plus"><span
+		class="ui-icon ui-icon-circle-plus"></span></li>
+	<li class="ui-state-default ui-corner-all"
+		title=".ui-icon-circle-close"><span
+		class="ui-icon ui-icon-circle-close"></span></li>
+</ul>
+
+<div class="delete">
+
+<button style="height: 25px; width: 25px;">Button with icon
+only</button>
+
+
+</div>
+<div class="add">
+
+<button style="height: 25px; width: 25px;">Button with icon
+only</button>
+
+</div>
+</body>
+</html>

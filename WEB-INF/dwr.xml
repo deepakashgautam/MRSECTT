@@ -1,0 +1,199 @@
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN"  "dwr20.dtd">
+<dwr>
+	<allow>
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.CommonBean" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.TrnReference" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.TrnMarking" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.TrnFileHdr" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstClass" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstRole" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstLogin" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstTenure" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstVIP" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstPreferredList" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstSubject" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstDepartment" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.TrnFileIntMarking" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.TrnAttachment" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.MstParty" />
+		<convert converter="bean" match="in.org.cris.mrsectt.Beans.satisfiedCustomerBean" />
+		<create creator="new" javascript="CommonDAO"> 
+			<param name="class" value="in.org.cris.mrsectt.dao.CommonDAO" />
+			<include method="changePassword" />
+			<include method="editprofile" />
+			<include method="getFileNoSearch"/>
+			<include method="SaveQuotes"/>
+			<include method="getSubjectKeywords"/>
+		</create>
+		
+		<create creator="new" javascript="FeedbackDAO"> 
+			<param name="class" value="in.org.cris.mrsectt.dao.FeedbackDAO" />
+			<include method="saveFeedback" />
+			<include method="checkExistingFeedbackforMonth" />
+			<include method="satisfiedCustomer"/>
+		</create>
+		
+		<create creator="new" javascript="MstRoleDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.MstRoleDAO"/>
+			<include method="getSearchData"/>
+		</create>
+
+		<create creator="new" javascript="MstVIPDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.MstVIPDAO"/>
+			<include method="getSearchData"/>
+		</create>
+		
+		<create creator="new" javascript="MstPartyDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.MstPartyDAO"/>
+			<include method="getSearchData"/>
+		</create>
+		
+		<create creator="new" javascript="MstTenureDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.MstTenureDAO"/>
+			<include method="getSearchData"/>
+		</create>
+		
+		<create creator="new" javascript="MstSubjectDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.MstSubjectDAO"/>
+			<include method="getSearchData"/>
+		</create>
+		
+		<create creator="new" javascript="MstLoginDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.MstLoginDAO"/>
+			<include method="getSearchData"/>
+			<include method="getLoginID"/>
+			<include method="getLoginData2"/>
+		</create>
+		
+		
+		<create creator="new" javascript="DashboardSubjectWiseDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.DashboardSubjectWiseDAO"/>
+			<include method="saveComplianceData"/>
+			<include method="saveComplianceDataSub"/>
+			<include method="saveComplianceDataSubRailway"/>
+			
+		</create>
+
+		<create creator="new" javascript="MstDepartmentDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.MstDepartmentDAO"/>
+			<include method="getSearchData"/>			
+		</create>
+		
+		<create creator="new" javascript="TrnReferenceDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.TrnReferenceDAO"/>
+			<include method="getSearchData"/>
+			<include method="getSearchDataOnRefNo"/>
+			<include method="getSearchDataNew"/>
+			<include method="setReturnBoxAction"/>
+			<include method="getTreeview"/>
+			<include method="saveReminder"/>
+			<include method="saveBudgetData"/>
+			<include method="deleteBudgetRow"/>
+			<include method="deleteRefImage"/>
+			<include method="saveFileStatus"/>
+			<include method="getClassCounter"/> 
+			<include method="getCounterStatus"/>
+			<include method="getCounterStatusNew"/> 
+			<include method="getRefDetail"/> 
+			<include method="getSearchSub"/> 
+			<include method="getSearchSub1"/> 
+			<include method="getSearchSubRefReply"/> 
+			
+		</create>
+
+		<create creator="new" javascript="ReferenceInbxoDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.ReferenceInbxoDAO"/>
+			<include method="setInboxAction"/>
+			<include method="setoutBoxAction"/>		
+			<include method="getSearchData"/>		
+			<include method="getReferenceInboxSearchData"/>		 
+			
+		</create>
+		
+		<create creator="new" javascript="ReminderInbxoDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.ReminderInbxoDAO"/>
+			<include method="setInboxReminderAction"/>
+			<include method="setoutBoxAction"/>
+			<include method="setReturnBoxAction"/>
+			<include method="getSearchFileInboxOutBox"/>
+			
+			
+		</create>
+		
+		<create creator="new" javascript="TrnFileManagementDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.TrnFileManagementDAO"/>
+			<include method="getSearchData"/>
+			<include method="setFileInboxAction"/>
+			<include method="setFileOutBoxAction"/>
+			<include method="getSearchFileInboxOutBox"/>			
+			<include method="delReference"/>			
+			<include method="RefNoValidate"/>		
+			<include method="getCounterStatusNew"/>	
+			<include method="getSearchFileIntInboxOutBox"/>	
+			<include method="getSearchSub2"/> 
+			<include method="getSearchSub3"/>
+			<include method="getSearchSubReply"/>
+			<include method="getIntMark"/>
+			<include method="getFileCounterStatus"/>
+		</create>
+		
+		<create creator="new" javascript="CustomReportDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.CustomReportDAO" />
+			<include method="deleteReport" />
+			<include method="updateReportLayout" />
+			<include method="getFileName" />
+		</create>
+		
+		<create creator="new" javascript="PreferredListDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.PreferredListDAO" />
+			<include method="populateDeptList" />
+			<include method="populateAuthList" />
+		</create>
+
+		<create creator="new" javascript="CustomReportFileMovDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.CustomReportFileMovDAO" />
+			<include method="deleteReport" />
+			<include method="updateReportLayout" />
+		</create>		
+
+		<create creator="new" javascript="ReportRefNoDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.ReportRefNoDAO" />
+			<include method="getIncomingDate" />
+			<include method="getIncomingDateFM" />
+		</create>		
+
+		<create creator="new" javascript="ReportFileNoDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.ReportFileNoDAO" />
+			<include method="getIncomingDate" />
+		</create>		
+
+		<create creator="new" javascript="ModifyAckDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.ModifyAckDAO" />
+			<include method="getSearchSub" />
+			<include method="updateData" />
+		</create>		
+
+		<create creator="new" javascript="ModifyHindi_GDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.ModifyHindi_GDAO" />
+			<include method="getSearchSub" />
+			<include method="getFileIntMarking" />
+			<include method="getIncomingDateFM" />
+			<include method="updateDataFM2" />
+		</create>		
+
+		<create creator="new" javascript="ReminderAutoDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.ReminderAutoDAO" />
+			<include method="dataPatched" />
+			<include method="patchSingleReminder" />
+		</create>	
+		
+		<create creator="new" javascript="DashboardDAO">
+			<param name="class" value="in.org.cris.mrsectt.dao.DashboardDAO"/>
+			<include method="getTotalReference"/>
+			<include method="getReferenceSubjectWise"/>
+			<include method="getReferenceStatus"/>
+			
+			
+		</create>	
+	</allow>
+</dwr>

@@ -1,0 +1,169 @@
+body {
+background-color: #e1f1cf;
+margin-top: 0px; 
+color: #000000;
+}
+
+.treven{
+background-color:  #f4ffdf;
+}
+.trodd{
+background-color:  #d8edc0;
+}
+.treven1{
+background-color:  #F5FAF3;
+color: #000000;
+}
+.trodd1{
+background-color:  #FAFFDF;
+color: #000000;
+}
+.drop {
+	background-color: #EFE9BA;
+	border: 1px solid #800000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	padding-top: 1px;
+	padding-bottom: 1px; rect ( );
+	padding-left: 1px;
+	background-position: 22px
+}
+
+.pageheader,caption,h2,legend {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: left;
+	background-image: url("/MRSECTT/theme/dotted_line.gif");
+	background-repeat: repeat-x;
+	background-position: bottom;
+	padding-bottom: 5px;
+	color: #000066;
+	white-space: normal;
+}
+
+.formheader,tbody {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	white-space: normal;
+	font-weight: bold;	
+}
+
+.formtext {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000000;
+}
+.formtextbold {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #0000ff;
+}
+
+.text {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: normal;
+	color: #333333;
+}
+
+tr{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	white-space: normal;
+	font-weight: bold;
+}
+th {
+	background-color: #C5E5A2;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	white-space: normal;
+	height: 14px;
+	font-weight: bold;
+	border: solid 1px #95C267;
+	color: #000000;
+}
+td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	white-space: normal;
+	font-weight: normal;
+	empty-cells: show;
+	
+}
+INPUT,SELECT {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: normal;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 1px solid #978F8F;
+}
+img
+{
+vertical-align: middle;
+}
+.inputgreyed {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #000000;
+	background-color: #D3D3D3;
+	border: 1px solid #666666;
+}
+
+.butts {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #FFF;
+	background-color: #89BF09;
+	height: 22px;
+	float: none;
+	padding-left: 5px;
+	padding-right: 5px;
+	/*border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFFFFF;
+	border-right-color: #FFFFFF;
+	border-bottom-color: #000000;
+	border-left-color: #000000;*/
+	background-image: url("/MRSECTT/theme/butt.gif");
+}
+
+.butts1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #333333;
+	background-color: #DCD3B0;
+	float: none;
+	border: 1px solid #000000;
+	width: 120px;
+
+}
+#data {
+	border: solid 1px #009900;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+#data td{
+	border-top: solid 1px #009900;
+	border-right: solid 1px #009900;
+	height: 12px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+table TABLE{
+margin-top: 10PX;
+}

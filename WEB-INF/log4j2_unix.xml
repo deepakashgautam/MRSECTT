@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+<appender name="file" class="org.apache.log4j.RollingFileAppender">
+	<param name="MaxFileSize" value="10MB" />
+	<param name="MaxBackupIndex" value="10" />
+	<param name="File" value="/opt/MRSECTT/MRSECTT.log" />
+	<param name="Append" value="true" />
+	<param name="threshold" value="debug"/>
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="[%d] %c %-5p - %m%n" />
+	</layout>
+</appender>
+<appender name="myConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+	<param name="threshold" value="debug"/>
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n" />
+	</layout>
+</appender>
+<appender name="mail" class="org.apache.log4j.net.SMTPAppender">
+<param name="SMTPHost" value="172.16.1.207" />
+<param name="SMTPUsername" value="devendra mani" />
+<param name="SMTPPassword" value="123456" />
+<param name="From" value="mani.devendra@cris.org.in" />
+<param name="To" value="devmgs@gmail.com" />
+<param name="Subject" value="[TMSLOG] ..." />
+<param name="BufferSize" value="1" />
+<param name="threshold" value="error" />
+<layout class="org.apache.log4j.PatternLayout">
+<param name="ConversionPattern" value="[%d] %c %-5p - %m%n" />
+</layout>
+</appender>
+ <category name="org.quartz" additivity="false">
+   <priority value="FATAL" />
+   <appender-ref ref="file" />
+</category>
+<root>
+<priority value="debug"></priority>
+<appender-ref ref="file"/>
+</root>
+</log4j:configuration>

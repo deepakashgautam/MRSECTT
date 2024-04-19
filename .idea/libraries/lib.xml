@@ -1,0 +1,36 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/commons-digester-1.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/jcommon-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/activation-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/c3p0-0.9.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/commons-collections-2.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/ojdbc6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/c3p0-0.9.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/slf4j-api-1.6.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/jai_core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/jasperreports-3.7.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/mail-1.5.0-b01.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-slf4j-impl-2.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/quartz-jobs-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-web-2.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/itext-1.3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/uploadbean.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/itext-asian.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/dwr.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/quartz-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/commons-codec-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/poi-3.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/cos-09May2002.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/commons-beanutils-1.8.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-api-2.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/jai_codec-1.1.3-alpha.jar!/" />
+      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-core-2.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../WebSphere/wlp/dev/api/spec/com.ibm.websphere.javaee.servlet.4.0_1.0.87.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,11 @@
+ClearCase CopyAreaDB|4
+vobs\eemsvob\EEMS\WebContent\jqplot\examples\jquery-ui\js
+2
+7
+10:jquery-ui.min.js|1|141c66a3d17|3361f|b3d442f|25c1e8a563c411e28d913cd92bf26666|0
+17:jquery-ui-1.9pre.min.js|1|141c66a3c7b|389cc|806bc230|2181e80d63c411e28d913cd92bf26666|0
+c:jquery-ui.js|1|141c66a3e9d|5bdf2|37c23c4e|2651e8b563c411e28d913cd92bf26666|0
+1a:jquery.effects.core.min.js|1|141c66a3ebc|2df8|c273d4d|2781e8c563c411e28d913cd92bf26666|0
+1b:jquery.effects.blind.min.js|1|141c66a3f19|459|4ccc7664|2881e8e563c411e28d913cd92bf26666|0
+16:jquery.effects.core.js|1|141c66a3efa|67d7|3e02cbe6|27d1e8d563c411e28d913cd92bf26666|0
+17:jquery.effects.blind.js|1|141c66a3f39|783|74264c72|28d1e8f563c411e28d913cd92bf26666|0

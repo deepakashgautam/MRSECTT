@@ -1,0 +1,120 @@
+/*
+ * Created on Sep 2, 2009
+ *
+ * TODO To change the template for this generated file go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
+package in.org.cris.mrsectt.dao;
+
+import in.org.cris.mrsectt.Beans.MstLogin;
+import in.org.cris.mrsectt.dbConnection.DBConnection;
+
+import java.sql.ResultSet;
+
+import org.apache.logging.log4j.Logger; import org.apache.logging.log4j.LogManager;
+
+public class LoginDAO {
+	static Logger log = LogManager.getLogger(LoginDAO.class);
+
+	public MstLogin validateLogin(String loginid, String password,
+			String sessionid) {
+		MstLogin bn = new MstLogin();
+		String strSQL = "";
+		DBConnection con = new DBConnection();
+		try {
+
+			con.openConnection();
+
+			/*PreparedStatement ps = null;
+			ps = con.setPrepStatement(" SELECT LOGINID, PASSWORD, LOGINASROLEID, (SELECT TENUREID FROM MSTTENURE WHERE ROLEID = LOGINASROLEID AND ISACTIVE ='Y') TENUREID, ISACTIVELOGIN, LASTLOGINDATE,  STARTDATE," 
+								+ " ENDDATE, LOGINDESIGNATION, LOGINNAME "
+								+ " FROM MSTLOGIN "
+								+ " WHERE LOGINID=? AND PASSWORD=?");
+			ps.setString(1, loginid);
+			ps.setString(2, password);*/
+			
+			String sqlStr = " SELECT A.LOGINID, A.PASSWORD, A.LOGINASROLEID, " +
+					" (SELECT ROLENAME FROM MSTROLE WHERE ROLEID = A.LOGINASROLEID) LOGINASROLENAME," +
+					" B.TENUREID TENUREID, " +
+					" B.TENUREOFFICENAME TENUREOFFICENAME, " +
+					" A.ISACTIVELOGIN, A.LASTLOGINDATE," +
+					" A.STARTDATE, A.ENDDATE, A.LOGINDESIGNATION, A.LOGINNAME, " +
+					" TO_CHAR(B.TENURESTARTDATE, 'DD/MM/YYYY') TENURESTARTDATE " +
+					" FROM MSTLOGIN A, MSTTENURE B " +
+					" WHERE A.LOGINASROLEID = B.ROLEID " +
+					" AND B.ISACTIVE = 'Y' " + 
+					" AND UPPER(A.LOGINID) = UPPER('"+loginid+"') AND A.PASSWORD='"+password+"'";
+
+			log.debug(sqlStr);
+			ResultSet rs = con.select(sqlStr);
+
+			if (rs.next()) {
+
+				bn.setLOGINID(handleNull(rs.getString("LOGINID")));
+				bn.setPASSWORD(handleNull(rs.getString("PASSWORD")));
+				bn.setLOGINASROLEID(handleNull(rs.getString("LOGINASROLEID")));
+				bn.setLOGINASROLENAME(handleNull(rs.getString("LOGINASROLENAME")));
+				bn.setTENUREID(handleNull(rs.getString("TENUREID")));
+				bn.setISACTIVELOGIN(handleNull(rs.getString("ISACTIVELOGIN")));
+				bn.setLASTLOGINDATE(handleNull(rs.getString("LASTLOGINDATE")));
+				bn.setSTARTDATE(handleNull(rs.getString("STARTDATE")));
+				bn.setENDDATE(handleNull(rs.getString("ENDDATE")));
+				bn.setLOGINDESIGNATION(handleNull(rs.getString("LOGINDESIGNATION")));
+				bn.setLOGINNAME(handleNull(rs.getString("LOGINNAME")));
+				bn.setTENUREOFFICENAME(handleNull(rs.getString("TENUREOFFICENAME")));
+				bn.setTENURESTARTDATE(handleNull(rs.getString("TENURESTARTDATE")));
+
+				bn.setISVALIDUSER("Y");
+				bn.setTHEME("1");
+
+			} else {
+				bn.setISVALIDUSER("N");
+			}
+			rs.close();
+			if ("Y".equalsIgnoreCase(bn.getISVALIDUSER())) {
+
+					strSQL = " UPDATE MSTLOGIN SET LASTLOGINDATE = SYSDATE "
+							+ " WHERE UPPER(LOGINID)=UPPER('" + loginid + "')";
+					//System.out.println(strSQL);
+					con.update(strSQL);
+
+			}
+		} catch (Exception e) {
+			con.rollback();
+//			e.printStackTrace();
+			log.fatal(e,e);
+		} finally {
+			con.closeConnection();
+		}
+		return bn;
+	}
+
+	public String getFilePath() {
+		String result = "";
+		String strSQL = "";
+		DBConnection con = new DBConnection();
+		try {
+
+			con.openConnection();
+			strSQL = " SELECT FILEPATH FROM CONFIG_MAST ";
+			//System.out.println(strSQL);
+			//
+			ResultSet rs = con.select(strSQL);
+
+			if (rs.next()) {
+				result = rs.getString(1);
+			}
+			rs.close();
+
+		} catch (Exception e) {
+			con.rollback();
+			// log.fatal(e,e);
+		} finally {
+			con.closeConnection();
+		}
+		return result;
+	}
+	public String handleNull(String str) {
+		return str != null ? CommonDAO.numberFormat(str) : "";
+	}
+}

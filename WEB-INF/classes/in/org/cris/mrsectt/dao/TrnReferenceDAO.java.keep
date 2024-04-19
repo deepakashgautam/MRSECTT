@@ -1,0 +1,1286 @@
+package in.org.cris.mrsectt.dao;
+
+import in.org.cris.mrsectt.Beans.CommonBean;
+import in.org.cris.mrsectt.Beans.TrnBudget;
+import in.org.cris.mrsectt.Beans.TrnMarking;
+import in.org.cris.mrsectt.Beans.TrnReference;
+import in.org.cris.mrsectt.dbConnection.DBConnection;
+import in.org.cris.mrsectt.util.StringFormat;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import org.apache.logging.log4j.Logger; import org.apache.logging.log4j.LogManager;
+
+
+public class TrnReferenceDAO {
+	static Logger log = LogManager.getLogger(TrnReferenceDAO.class);
+	
+
+public String saveBudgetData(String BDGREFID[],String BUDGETSEQUENCE[],String BDGSUBJECTCODE[], String BDGSUBJECT[], String BDGMRREMARK[], String BDGREMARK[], String LOGINID)
+{
+	String result = "";
+	DBConnection con = new DBConnection();
+	try {
+		con.openConnection();
+		
+		//skip first row for hidden row
+		for (int cnt = 1; cnt < BDGREFID.length; cnt++) {
+			if (BDGREFID[cnt] != null && BDGSUBJECTCODE[cnt] != null) {
+				
+				//String GeneratedBUDGETSEQUENCE = "";
+				if (BUDGETSEQUENCE[cnt] != null && BUDGETSEQUENCE[cnt].trim().length()<=0) {
+					
+					BUDGETSEQUENCE[cnt] = getNextBudgetSequence(con, "BUDGETSEQUENCE", "TRNBUDGET", BDGREFID[cnt]);
+					log.info("Generated Budget Sequence is  ************* "+BUDGETSEQUENCE[cnt]) ;
+					
+					String budgetQuery = " INSERT INTO TRNBUDGET (REFID, BUDGETSEQUENCE, SUBJECTCODE, SUBJECT, MRREMARK, REMARK, LOGINID, CHANGEDATE) "
+						+ " VALUES ("
+						+ " '"+ BDGREFID[cnt]+ "',"
+						+ " '"+ BUDGETSEQUENCE[cnt]+ "',"
+						+ " '"+ BDGSUBJECTCODE[cnt]+ "',"
+						+ " '"+ BDGSUBJECT[cnt]+ "',"
+						+ " '"+ BDGMRREMARK[cnt]+ "',"
+						+ " '"+ BDGREMARK[cnt]+ "',"
+						+ " '"+ LOGINID+ "',"
+						+ " SYSDATE"
+						+ ")";
+						
+						log.debug(budgetQuery);
+						con.insert(budgetQuery);
+					
+					
+				}else{
+					
+					String budgetQuery = " UPDATE TRNBUDGET SET SUBJECTCODE = '"+ BDGSUBJECTCODE[cnt]+ "'," +
+							" SUBJECT = '"+ BDGSUBJECT[cnt]+ "', " +
+							" MRREMARK = '"+ BDGMRREMARK[cnt]+ "'," +
+							" REMARK = '"+ BDGREMARK[cnt]+ "', " +
+							" LOGINID = '"+ LOGINID+ "'," +
+							" CHANGEDATE = SYSDATE " +
+							" WHERE REFID = '"+ BDGREFID[cnt]+ "' AND BUDGETSEQUENCE = '"+ BUDGETSEQUENCE[cnt]+ "' ";
+						
+						log.debug(budgetQuery);
+						con.insert(budgetQuery);
+					
+				}
+					
+				
+			}
+		}
+
+		result = "1~Data Saved";
+
+	} catch (Exception e) {
+		e.printStackTrace();
+		result = "0~" + e.getMessage();
+		con.rollback();
+	} finally {
+		con.closeConnection();
+	}
+	return result;
+
+}
+public String deleteBudgetRow(String refId,String budgetSequence){
+	String result = "";
+	DBConnection con = new DBConnection();
+	try {
+		con.openConnection();
+		
+				String budgetQuery = " 	DELETE FROM TRNBUDGET WHERE REFID = '"+refId+"' AND BUDGETSEQUENCE = '"+budgetSequence+"'";
+				
+				log.debug(budgetQuery);
+				con.delete(budgetQuery);
+
+				result = "1~Data Saved";
+		
+	} catch (SQLException e) {
+		e.printStackTrace();
+		result = "0~" + e.getMessage();
+		con.rollback();
+	} finally {
+		con.closeConnection();
+	}
+	return result;
+	
+}
+
+public ArrayList<TrnReference> getSearchData(String tenureId, String refNofrom, String refNoTo, String incomingDateFrom, String incomingDateTo, String referenceNameSearch,   String subjectSearch, String commonSearch, String commonSearchValue){
+	
+	ArrayList<TrnReference> arrList = new ArrayList<TrnReference>();
+	DBConnection con =  new DBConnection();
+	
+	String strSQL = " SELECT DISTINCT A.REFID, A.REFNO, A.SUBJECT  FROM TRNREFERENCE A WHERE A.TENUREID = '"+tenureId+"' AND ";
+	String tempSQL = "";
+	
+	
+	log.info(" refNofrom : "+ refNofrom);
+	
+	
+	if( refNofrom.trim().length() > 0 && refNoTo.trim().length() > 0){
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		
+		//code to handle REFNO Search
+		String[] arrRefNoFrom = refNofrom.split("/"); 
+		String[] arrRefNoTo = refNoTo.split("/");
+		
+		String refClassFrom = arrRefNoFrom[0]; 
+		String refCountFrom = arrRefNoFrom[1]; 
+		String refYearFrom = arrRefNoFrom[2]; 
+
+		//String refClassTo = arrRefNoTo[0]; 
+		String refCountTo = arrRefNoTo[1]; 
+		String refYearTo = arrRefNoTo[2]; 
+		
+//		tempSQL += " A.REFNO BETWEEN '"+refNofrom+"' AND '"+refNoTo+"'";
+		tempSQL += " UPPER(A.REFCLASS) = UPPER('"+refClassFrom+"') " +
+				   " AND (TO_CHAR(REFERENCEDATE, 'YYYY') BETWEEN '"+refYearFrom+"' AND '"+refYearTo+"') " +
+				   " AND (A.REFCOUNT BETWEEN '"+refCountFrom+"' AND '"+refCountTo+"')";
+	}
+	
+	if( incomingDateFrom.trim().length() > 0 && incomingDateTo.trim().length() > 0){
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		tempSQL += " A.INCOMINGDATE BETWEEN TO_DATE('"+incomingDateFrom+"', 'DD/MM/YYYY') AND TO_DATE('"+incomingDateTo+"', 'DD/MM/YYYY')";
+		
+	}
+	
+	if( referenceNameSearch.trim().length() > 0 ){
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		tempSQL += " UPPER(A.REFERENCENAME) LIKE UPPER('%"+referenceNameSearch+"%')";
+		
+	}
+	
+	if(subjectSearch.trim().length()> 0 ){
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		tempSQL += " UPPER(B.SUBJECT) LIKE UPPER('%"+subjectSearch+"%')";
+	}
+	strSQL += tempSQL;
+	strSQL += " ORDER BY A.REFID";
+	
+	
+	try {
+		log.debug(strSQL);
+		con.openConnection();
+		ResultSet rs =  con.select(strSQL);
+		while (rs.next()) {
+			TrnReference bn =  new TrnReference();
+			bn.setREFID(StringFormat.nullString(rs.getString("REFID")));
+			bn.setREFNO(StringFormat.nullString(rs.getString("REFNO")));
+			bn.setSUBJECT(StringFormat.nullString(rs.getString("SUBJECT")));
+			
+			arrList.add(bn);
+		}
+		rs.close();
+		
+		
+	} catch(SQLException e)		{
+		log.fatal(e,e);
+	} finally{
+		
+		con.closeConnection();
+	}
+	
+	return arrList;
+	
+}
+public ArrayList<TrnReference> getSearchDataNew(String tenureId, String refNofrom, String refNoTo, String incomingDateFrom, String incomingDateTo, String referenceNameSearch,   String subjectSearch, String commonSearch, String commonSearchValue){
+	
+	ArrayList<TrnReference> arrList = new ArrayList<TrnReference>();
+	DBConnection dbCon =  new DBConnection();
+	
+	String strSQL = " SELECT REFID, TENUREID, REFNO, 'Anoop' SUBJECT, ROLEID, REFCLASS, REFCOUNT, TO_CHAR(INCOMINGDATE, 'DD/MM/YYYY') INCOMINGDATE, REFERENCENAME," +
+						" TO_CHAR(LETTERDATE, 'DD/MM/YYYY') LETTERDATE, ISBUDGET, VIPSTATUS, STATECODE, TO_CHAR(ACKDATE, 'DD/MM/YYYY') ACKDATE, ACKBY, REFCATEGORY, LANGUAGE, URGENCY," +
+						" LINKREFID, NOTECREATOR, SECURITYGRADING, SIGNEDBY, TO_CHAR(SIGNEDON, 'DD/MM/YYYY') SIGNEDON, REMARKS, ODSPLACE, ODSRAILWAY," +
+						" TO_CHAR(ODSDATE, 'DD/MM/YYYY') ODSDATE, LOGINID, CHANGEDATE " +
+						" FROM TRNREFERENCE A WHERE A.TENUREID = '"+tenureId+"' AND ";
+	String tempSQL = "";
+	
+	if( refNofrom.trim().length() > 0 && refNoTo.trim().length() > 0){
+		
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		
+		
+		//code to handle REFNO Search
+		String[] arrRefNoFrom = refNofrom.split("/"); 
+		String[] arrRefNoTo = refNoTo.split("/");
+		
+		String refClassFrom = arrRefNoFrom[0]; 
+		String refCountFrom = arrRefNoFrom[1]; 
+		String refYearFrom = arrRefNoFrom[2]; 
+
+		//String refClassTo = arrRefNoTo[0]; 
+		String refCountTo = arrRefNoTo[1]; 
+		String refYearTo = arrRefNoTo[2]; 
+		
+		
+//		tempSQL += " A.REFNO BETWEEN '"+refNofrom+"' AND '"+refNoTo+"'";
+		tempSQL += " UPPER(A.REFCLASS) = UPPER('"+refClassFrom+"') " +
+		   " AND (TO_CHAR(REFERENCEDATE, 'YYYY') BETWEEN '"+refYearFrom+"' AND '"+refYearTo+"') " +
+		   " AND (A.REFCOUNT BETWEEN '"+refCountFrom+"' AND '"+refCountTo+"')";
+		
+	}
+	
+	if( incomingDateFrom.trim().length() > 0 && incomingDateTo.trim().length() > 0){
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		tempSQL += " A.INCOMINGDATE BETWEEN TO_DATE('"+incomingDateFrom+"', 'DD/MM/YYYY') AND TO_DATE('"+incomingDateTo+"', 'DD/MM/YYYY')";
+		
+	}
+	
+	if( referenceNameSearch.trim().length() > 0 ){
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		tempSQL += " UPPER(A.REFERENCENAME) LIKE UPPER('%"+referenceNameSearch+"%')";
+		
+	}
+	
+	if(subjectSearch.trim().length()> 0 ){
+		tempSQL += (tempSQL.length() > 0)? " AND ": "";
+		tempSQL += " UPPER(A.SUBJECT) LIKE UPPER('%"+subjectSearch+"%')";
+	}
+	strSQL += tempSQL;
+	strSQL += " ORDER BY A.REFID";
+	
+	
+	try {
+		log.debug(strSQL);
+		dbCon.openConnection();
+		ResultSet rs =  dbCon.select(strSQL);
+		while (rs.next()) {
+			TrnReference refBean = new TrnReference();
+			
+			refBean.setREFID(StringFormat.nullString(rs.getString("REFID")));
+			refBean.setREFNO(StringFormat.nullString(rs.getString("REFNO")));
+//			refBean.setTENUREID(StringFormat.nullString(rs.getString("TENUREID")));
+			refBean.setSUBJECT(StringFormat.nullString(rs.getString("SUBJECT")));
+//			refBean.setROLEID(StringFormat.nullString(rs.getString("ROLEID")));
+			refBean.setREFCLASS(StringFormat.nullString(rs.getString("REFCLASS")));
+			refBean.setREFCOUNT(StringFormat.nullString(rs.getString("REFCOUNT")));
+			refBean.setINCOMINGDATE(StringFormat.nullString(rs.getString("INCOMINGDATE")));
+			refBean.setREFERENCENAME(StringFormat.nullString(rs.getString("REFERENCENAME")));
+			refBean.setLETTERDATE(StringFormat.nullString(rs.getString("LETTERDATE")));
+			refBean.setISBUDGET(StringFormat.nullString(rs.getString("ISBUDGET")));
+			refBean.setVIPSTATUS(StringFormat.nullString(rs.getString("VIPSTATUS")));
+			refBean.setSTATECODE(StringFormat.nullString(rs.getString("STATECODE")));
+			refBean.setACKDATE(StringFormat.nullString(rs.getString("ACKDATE")));
+			refBean.setACKBY(StringFormat.nullString(rs.getString("ACKBY")));
+			refBean.setREFCATEGORY(StringFormat.nullString(rs.getString("REFCATEGORY")));
+			refBean.setLANGUAGE(StringFormat.nullString(rs.getString("LANGUAGE")));
+			refBean.setURGENCY(StringFormat.nullString(rs.getString("URGENCY")));
+			refBean.setLINKREFID(StringFormat.nullString(rs.getString("LINKREFID")));
+			refBean.setNOTECREATOR(StringFormat.nullString(rs.getString("NOTECREATOR")));
+			refBean.setSECURITYGRADING(StringFormat.nullString(rs.getString("SECURITYGRADING")));
+			refBean.setSIGNEDBY(StringFormat.nullString(rs.getString("SIGNEDBY")));
+			refBean.setSIGNEDON(StringFormat.nullString(rs.getString("SIGNEDON")));
+			refBean.setREMARKS(StringFormat.nullString(rs.getString("REMARKS")));
+			refBean.setODSPLACE(StringFormat.nullString(rs.getString("ODSPLACE")));
+			refBean.setODSRAILWAY(StringFormat.nullString(rs.getString("ODSRAILWAY")));
+			refBean.setODSDATE(StringFormat.nullString(rs.getString("ODSDATE")));
+//			refBean.setLOGINID(StringFormat.nullString(rs.getString("LOGINID")));
+//			refBean.setCHANGEDATE(StringFormat.nullString(rs.getString("CHANGEDATE")));
+			
+			//getting the marking table details
+			refBean.setMarkingBeanList(getMarkingSearch(refBean.getREFID()));
+			
+			arrList.add(refBean);
+		}
+		rs.close();
+		
+	} catch(SQLException e)		{
+		log.fatal(e,e);
+	}finally{
+		
+		dbCon.closeConnection();
+	}
+	
+	return arrList;
+	
+}
+
+	
+	public ArrayList<TrnMarking> getMarkingSearch(String refId) {
+		ArrayList<TrnMarking> markingBeanList = new ArrayList<TrnMarking>();
+		DBConnection dbCon = new DBConnection();
+		
+		// Getting the Detail Marking Table Details
+		String strSQLMarking = " SELECT REFID, MARKINGSEQUENCE, MARKINGFROM, MARKINGTO, TO_CHAR(MARKINGDATE, 'DD/MM/YYYY') MARKINGDATE, MARKINGREMARK, "
+				+ " TARGETDAYS, TO_CHAR(TARGETDATE, 'DD/MM/YYYY') TARGETDATE, SUBJECTCODE, SUBJECT "
+				+ " FROM TRNMARKING WHERE REFID = '"+ refId + "'" 
+//				+ " FROM TRNMARKING WHERE REFID IN (1, 2) " 
+				+ " AND MARKINGSEQUENCE =1 ORDER BY MARKINGSEQUENCE ";
+		
+		log.debug(strSQLMarking);
+		dbCon.openConnection();
+		try {
+			ResultSet rsMarking = dbCon.select(strSQLMarking);
+			
+			while (rsMarking.next()) {
+				TrnMarking markingBean = new TrnMarking();
+				
+				markingBean.setREFID(StringFormat.nullString(rsMarking.getString("REFID")));
+				markingBean.setMARKINGSEQUENCE(StringFormat.nullString(rsMarking.getString("MARKINGSEQUENCE")));
+				markingBean.setMARKINGFROM(StringFormat.nullString(rsMarking.getString("MARKINGFROM")));
+				markingBean.setMARKINGTO(StringFormat.nullString(rsMarking.getString("MARKINGTO")));
+				markingBean.setMARKINGDATE(StringFormat.nullString(rsMarking.getString("MARKINGDATE")));
+				markingBean.setMARKINGREMARK(StringFormat.nullString(rsMarking.getString("MARKINGREMARK")));
+				markingBean.setTARGETDAYS(StringFormat.nullString(rsMarking.getString("TARGETDAYS")));
+				markingBean.setTARGETDATE(StringFormat.nullString(rsMarking.getString("TARGETDATE")));
+				markingBean.setSUBJECTCODE(StringFormat.nullString(rsMarking.getString("SUBJECTCODE")));
+				markingBean.setSUBJECT(StringFormat.nullString(rsMarking.getString("SUBJECT")));
+				
+				markingBeanList.add(markingBean);
+				
+			}
+			rsMarking.close();
+			
+		} catch (SQLException e) {
+			log.fatal(e, e);
+		} finally {
+			
+			dbCon.closeConnection();
+		}
+		
+		return markingBeanList;
+	}
+
+public ArrayList<CommonBean> getRefNameSearch(String refName){
+	ArrayList<CommonBean> arrList = new ArrayList<CommonBean>();
+	DBConnection con =  new DBConnection();
+	
+	String strSQL = " SELECT VIPNAME, VIPSTATUS, STATECODE  FROM MSTVIP ";
+	
+	try {
+		log.debug(strSQL);
+		con.openConnection();
+		ResultSet rs =  con.select(strSQL);
+		while (rs.next()) {
+			CommonBean bn =  new CommonBean();
+			bn.setField1(StringFormat.nullString(rs.getString("VIPNAME")));
+			bn.setField2(StringFormat.nullString(rs.getString("VIPSTATUS")));
+			bn.setField3(StringFormat.nullString(rs.getString("STATECODE")));
+			
+			arrList.add(bn);
+		}
+		rs.close();
+		
+		
+	} catch(SQLException e)		{
+		log.fatal(e,e);
+	}finally{
+		con.closeConnection();
+	}
+	
+	return arrList;
+	
+}
+
+
+	
+public TrnReference getRefData(String refId) {
+	TrnReference refBean =null;
+
+	DBConnection con =  new DBConnection();
+	try {
+
+		//Getting the Header Table Details
+		String strSQL = " SELECT REFID, TENUREID, REFNO, ROLEID, REFCLASS, REFCOUNT, TO_CHAR(INCOMINGDATE, 'DD/MM/YYYY') INCOMINGDATE, REFERENCENAME," +
+						" TO_CHAR(LETTERDATE, 'DD/MM/YYYY') LETTERDATE, ISBUDGET, VIPSTATUS, STATECODE, TO_CHAR(ACKDATE, 'DD/MM/YYYY') ACKDATE, ACKBY, REFCATEGORY, LANGUAGE, URGENCY," +
+						" LINKREFID, NOTECREATOR, SECURITYGRADING, SIGNEDBY, TO_CHAR(SIGNEDON, 'DD/MM/YYYY') SIGNEDON, REMARKS, ODSPLACE, ODSRAILWAY," +
+						" TO_CHAR(ODSDATE, 'DD/MM/YYYY') ODSDATE, LOGINID, CHANGEDATE, SUBJECTCODE, SUBJECT " +
+						" FROM TRNREFERENCE WHERE REFID = '" + refId+ "'" + " ORDER BY REFNO ";
+
+		log.debug(strSQL);
+		con.openConnection();
+		ResultSet rs = con.select(strSQL);
+		while (rs.next()) {
+			refBean = new TrnReference();
+			
+			refBean.setREFID(StringFormat.nullString(rs.getString("REFID")));
+//			refBean.setTENUREID(StringFormat.nullString(rs.getString("TENUREID")));
+			refBean.setREFNO(StringFormat.nullString(rs.getString("REFNO")));
+//			refBean.setROLEID(StringFormat.nullString(rs.getString("ROLEID")));
+			refBean.setREFCLASS(StringFormat.nullString(rs.getString("REFCLASS")));
+			refBean.setREFCOUNT(StringFormat.nullString(rs.getString("REFCOUNT")));
+			refBean.setINCOMINGDATE(StringFormat.nullString(rs.getString("INCOMINGDATE")));
+			refBean.setREFERENCENAME(StringFormat.nullString(rs.getString("REFERENCENAME")));
+			refBean.setLETTERDATE(StringFormat.nullString(rs.getString("LETTERDATE")));
+			refBean.setISBUDGET(StringFormat.nullString(rs.getString("ISBUDGET")));
+			refBean.setVIPSTATUS(StringFormat.nullString(rs.getString("VIPSTATUS")));
+			refBean.setSTATECODE(StringFormat.nullString(rs.getString("STATECODE")));
+			refBean.setACKDATE(StringFormat.nullString(rs.getString("ACKDATE")));
+			refBean.setACKBY(StringFormat.nullString(rs.getString("ACKBY")));
+			refBean.setREFCATEGORY(StringFormat.nullString(rs.getString("REFCATEGORY")));
+			refBean.setLANGUAGE(StringFormat.nullString(rs.getString("LANGUAGE")));
+			refBean.setURGENCY(StringFormat.nullString(rs.getString("URGENCY")));
+			refBean.setLINKREFID(StringFormat.nullString(rs.getString("LINKREFID")));
+			refBean.setNOTECREATOR(StringFormat.nullString(rs.getString("NOTECREATOR")));
+			refBean.setSECURITYGRADING(StringFormat.nullString(rs.getString("SECURITYGRADING")));
+			refBean.setSIGNEDBY(StringFormat.nullString(rs.getString("SIGNEDBY")));
+			refBean.setSIGNEDON(StringFormat.nullString(rs.getString("SIGNEDON")));
+			refBean.setREMARKS(StringFormat.nullString(rs.getString("REMARKS")));
+			refBean.setODSPLACE(StringFormat.nullString(rs.getString("ODSPLACE")));
+			refBean.setODSRAILWAY(StringFormat.nullString(rs.getString("ODSRAILWAY")));
+			refBean.setODSDATE(StringFormat.nullString(rs.getString("ODSDATE")));
+//			refBean.setLOGINID(StringFormat.nullString(rs.getString("LOGINID")));
+//			refBean.setCHANGEDATE(StringFormat.nullString(rs.getString("CHANGEDATE")));
+			refBean.setSUBJECTCODE(StringFormat.nullString(rs.getString("SUBJECTCODE")));
+			refBean.setSUBJECT(StringFormat.nullString(rs.getString("SUBJECT")));
+
+		}
+		rs.close();
+
+		
+		
+		
+		//Getting the Detail Marking Table Details
+		String strSQLMarking = " SELECT REFID, MARKINGSEQUENCE, MARKINGFROM, MARKINGTO, TO_CHAR(MARKINGDATE, 'DD/MM/YYYY') MARKINGDATE, MARKINGREMARK, "+ 
+							   " TARGETDAYS, TO_CHAR(TARGETDATE, 'DD/MM/YYYY') TARGETDATE, SUBJECTCODE, SUBJECT " +
+							   " FROM TRNMARKING WHERE REFID = '" + refId+ "'" + " AND MARKINGSEQUENCE =1 ORDER BY MARKINGSEQUENCE ";
+
+		log.debug(strSQLMarking);
+		ResultSet rsMarking = con.select(strSQLMarking);
+		
+		ArrayList<TrnMarking> markingBeanList =  new ArrayList<TrnMarking>();
+		while (rsMarking.next()) {
+			TrnMarking markingBean = new TrnMarking();
+			
+			markingBean.setREFID(StringFormat.nullString(rsMarking.getString("REFID")));
+			markingBean.setMARKINGSEQUENCE(StringFormat.nullString(rsMarking.getString("MARKINGSEQUENCE")));
+			markingBean.setMARKINGFROM(StringFormat.nullString(rsMarking.getString("MARKINGFROM")));
+			markingBean.setMARKINGTO(StringFormat.nullString(rsMarking.getString("MARKINGTO")));
+			markingBean.setMARKINGDATE(StringFormat.nullString(rsMarking.getString("MARKINGDATE")));
+			markingBean.setMARKINGREMARK(StringFormat.nullString(rsMarking.getString("MARKINGREMARK")));
+			markingBean.setTARGETDAYS(StringFormat.nullString(rsMarking.getString("TARGETDAYS")));
+			markingBean.setTARGETDATE(StringFormat.nullString(rsMarking.getString("TARGETDATE")));
+			markingBean.setSUBJECTCODE(StringFormat.nullString(rsMarking.getString("SUBJECTCODE")));
+			markingBean.setSUBJECT(StringFormat.nullString(rsMarking.getString("SUBJECT")));
+			
+			markingBeanList.add(markingBean);
+
+		}
+		rsMarking.close();
+		
+		//now add the marking arraylist to the trnreference bean
+		refBean.setMarkingBeanList(markingBeanList);
+		
+		
+		//Getting the Detail Budget Table Details
+		String strSQLBudget = " SELECT REFID, BUDGETSEQUENCE, SUBJECTCODE, SUBJECT, MRREMARK, REMARK " +
+		" FROM TRNBUDGET WHERE REFID = '" + refId+ "' ORDER BY BUDGETSEQUENCE ";
+		
+		log.debug(strSQLBudget);
+		ResultSet rsBudget = con.select(strSQLBudget);
+		
+		ArrayList<TrnBudget> budgetBeanList =  new ArrayList<TrnBudget>();
+		while (rsBudget.next()) {
+			TrnBudget budgetBean = new TrnBudget();
+			
+			//	markingBean.setREFID(StringFormat.nullString(rsMarking.getString("REFID")));
+			budgetBean.setREFID(StringFormat.nullString(rsBudget.getString("REFID")));
+			budgetBean.setBUDGETSEQUENCE(StringFormat.nullString(rsBudget.getString("BUDGETSEQUENCE")));
+			budgetBean.setSUBJECTCODE(StringFormat.nullString(rsBudget.getString("SUBJECTCODE")));
+			budgetBean.setSUBJECT(StringFormat.nullString(rsBudget.getString("SUBJECT")));
+			budgetBean.setMRREMARK(StringFormat.nullString(rsBudget.getString("MRREMARK")));
+			budgetBean.setREMARK(StringFormat.nullString(rsBudget.getString("REMARK")));
+			
+			budgetBeanList.add(budgetBean);
+			
+		}
+		rsBudget.close();
+		
+		//now add the budget arraylist to the trnreference bean
+		refBean.setBudgetBeanList(budgetBeanList);
+		
+	} catch (SQLException e) {
+		log.fatal(e, e);
+	} finally {
+
+		con.closeConnection();
+	}
+
+	return refBean;
+
+}
+
+
+public ArrayList<TrnMarking> getInboxData(String tenureId) {
+	ArrayList<TrnMarking> markingBeanList =new ArrayList<TrnMarking>();
+
+	DBConnection con =  new DBConnection();
+	try {
+
+		String strSQLMarking = " SELECT A.REFID, (SELECT REFNO FROM TRNREFERENCE WHERE REFID = A.REFID) REFNO, MARKINGSEQUENCE," +
+				" (SELECT A.ROLENAME FROM MSTROLE A WHERE ROLEID = (SELECT B.ROLEID FROM MSTTENURE B WHERE B.TENUREID = MARKINGFROM) )  MARKINGFROM, MARKINGTO, TO_CHAR(MARKINGDATE, 'DD/MM/YYYY HH24:MI') MARKINGDATE,  MARKINGREMARK, TARGETDAYS," +
+				" TO_CHAR(TARGETDATE, 'DD/MM/YYYY') TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, TO_CHAR(ACTIONDATE, 'DD/MM/YYYY HH24:MI') ACTIONDATE" +
+				" FROM TRNMARKING A  WHERE A.MARKINGTO= '"+tenureId+"' AND A.ACTION IN('FOW', 'RET') AND A.MARKINGSEQUENCE = ( SELECT MAX(X.MARKINGSEQUENCE) FROM TRNMARKING X  WHERE X.REFID= A.REFID)";
+		
+		log.debug(strSQLMarking);
+		con.openConnection();
+		ResultSet rsMarking = con.select(strSQLMarking);
+		while (rsMarking.next()) {
+			TrnMarking markingBean = new TrnMarking();
+			
+			markingBean.setREFID(StringFormat.nullString(rsMarking.getString("REFID")));
+			markingBean.setREFNO(StringFormat.nullString(rsMarking.getString("REFNO")));
+			markingBean.setMARKINGSEQUENCE(StringFormat.nullString(rsMarking.getString("MARKINGSEQUENCE")));
+			markingBean.setMARKINGFROM(StringFormat.nullString(rsMarking.getString("MARKINGFROM")));
+			markingBean.setMARKINGTO(StringFormat.nullString(rsMarking.getString("MARKINGTO")));
+			markingBean.setMARKINGDATE(StringFormat.nullString(rsMarking.getString("MARKINGDATE")));
+			markingBean.setMARKINGREMARK(StringFormat.nullString(rsMarking.getString("MARKINGREMARK")));
+			markingBean.setTARGETDAYS(StringFormat.nullString(rsMarking.getString("TARGETDAYS")));
+			markingBean.setTARGETDATE(StringFormat.nullString(rsMarking.getString("TARGETDATE")));
+			markingBean.setSUBJECTCODE(StringFormat.nullString(rsMarking.getString("SUBJECTCODE")));
+			markingBean.setSUBJECT(StringFormat.nullString(rsMarking.getString("SUBJECT")));
+			markingBean.setACTION(StringFormat.nullString(rsMarking.getString("ACTION")));
+			markingBean.setACTIONDATE(StringFormat.nullString(rsMarking.getString("ACTIONDATE")));
+			
+			markingBeanList.add(markingBean);
+
+		}
+		rsMarking.close();
+		
+	} catch (SQLException e) {
+		log.fatal(e, e);
+	} finally {
+
+		con.closeConnection();
+	}
+
+	return markingBeanList;
+
+}
+
+public ArrayList<TrnMarking> getOutBoxData(String tenureId) {
+	ArrayList<TrnMarking> markingOutBeanList =new ArrayList<TrnMarking>();
+	
+	DBConnection con =  new DBConnection();
+	try {
+		
+		String strSQLMarking = " SELECT A.REFID, (SELECT REFNO FROM TRNREFERENCE WHERE REFID = A.REFID) REFNO, MARKINGSEQUENCE," +
+		" MARKINGFROM, " +
+		" (SELECT A.ROLENAME FROM MSTROLE A WHERE ROLEID = (SELECT B.ROLEID FROM MSTTENURE B WHERE B.TENUREID = MARKINGFROM) )  MARKINGFROMNAME, " +
+		" MARKINGTO, TO_CHAR(MARKINGDATE, 'DD/MM/YYYY HH24:MI') MARKINGDATE,  MARKINGREMARK, TARGETDAYS," +
+		" TO_CHAR(TARGETDATE, 'DD/MM/YYYY') TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, TO_CHAR(ACTIONDATE, 'DD/MM/YYYY HH24:MI') ACTIONDATE" +
+		" FROM TRNMARKING A  WHERE A.MARKINGTO= '"+tenureId+"' AND A.ACTION ='RCD' AND A.MARKINGSEQUENCE = ( SELECT MAX(X.MARKINGSEQUENCE) FROM TRNMARKING X  WHERE X.REFID= A.REFID)";
+		
+		log.debug(strSQLMarking);
+		con.openConnection();
+		ResultSet rsMarking = con.select(strSQLMarking);
+		while (rsMarking.next()) {
+			TrnMarking markingBean = new TrnMarking();
+			
+			markingBean.setREFID(StringFormat.nullString(rsMarking.getString("REFID")));
+			markingBean.setREFNO(StringFormat.nullString(rsMarking.getString("REFNO")));
+			markingBean.setMARKINGSEQUENCE(StringFormat.nullString(rsMarking.getString("MARKINGSEQUENCE")));
+			markingBean.setMARKINGFROM(StringFormat.nullString(rsMarking.getString("MARKINGFROM")));
+			markingBean.setMARKINGFROMNAME(StringFormat.nullString(rsMarking.getString("MARKINGFROMNAME")));
+			markingBean.setMARKINGTO(StringFormat.nullString(rsMarking.getString("MARKINGTO")));
+			markingBean.setMARKINGDATE(StringFormat.nullString(rsMarking.getString("MARKINGDATE")));
+			markingBean.setMARKINGREMARK(StringFormat.nullString(rsMarking.getString("MARKINGREMARK")));
+			markingBean.setTARGETDAYS(StringFormat.nullString(rsMarking.getString("TARGETDAYS")));
+			markingBean.setTARGETDATE(StringFormat.nullString(rsMarking.getString("TARGETDATE")));
+			markingBean.setSUBJECTCODE(StringFormat.nullString(rsMarking.getString("SUBJECTCODE")));
+			markingBean.setSUBJECT(StringFormat.nullString(rsMarking.getString("SUBJECT")));
+			markingBean.setACTION(StringFormat.nullString(rsMarking.getString("ACTION")));
+			markingBean.setACTIONDATE(StringFormat.nullString(rsMarking.getString("ACTIONDATE")));
+			
+			markingOutBeanList.add(markingBean);
+			
+		}
+		rsMarking.close();
+		
+	} catch (SQLException e) {
+		log.fatal(e, e);
+	} finally {
+		
+		con.closeConnection();
+	}
+	
+	return markingOutBeanList;
+	
+}
+
+
+
+
+
+public ArrayList<TrnMarking> getReturnBoxData(String tenureId) {
+	ArrayList<TrnMarking> markingOutBeanList =new ArrayList<TrnMarking>();
+	
+	DBConnection con =  new DBConnection();
+	try {
+		
+		String strSQLMarking = " SELECT A.REFID, (SELECT REFNO FROM TRNREFERENCE WHERE REFID = A.REFID) REFNO, MARKINGSEQUENCE, " +
+		" MARKINGFROM, " +
+		" (SELECT A.ROLENAME FROM MSTROLE A WHERE ROLEID = (SELECT B.ROLEID FROM MSTTENURE B WHERE B.TENUREID = MARKINGFROM) )  MARKINGFROMNAME, " +
+		" MARKINGTO, " +
+		" (SELECT A.ROLENAME FROM MSTROLE A WHERE ROLEID = (SELECT B.ROLEID FROM MSTTENURE B WHERE B.TENUREID = MARKINGTO) )  MARKINGTONAME, " +
+		" TO_CHAR(MARKINGDATE, 'DD/MM/YYYY HH24:MI') MARKINGDATE,  MARKINGREMARK, TARGETDAYS," +
+		" TO_CHAR(TARGETDATE, 'DD/MM/YYYY') TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, TO_CHAR(ACTIONDATE, 'DD/MM/YYYY HH24:MI') ACTIONDATE " +
+		" FROM TRNMARKING A  WHERE A.MARKINGTO= '"+tenureId+"' AND A.ACTION ='RET' AND 3 = ( SELECT MAX(X.MARKINGSEQUENCE) FROM TRNMARKING X  WHERE X.REFID = A.REFID)";
+		
+		log.debug(strSQLMarking);
+		con.openConnection();
+		ResultSet rsMarking = con.select(strSQLMarking);
+		while (rsMarking.next()) {
+			TrnMarking markingBean = new TrnMarking();
+			
+			markingBean.setREFID(StringFormat.nullString(rsMarking.getString("REFID")));
+			markingBean.setREFNO(StringFormat.nullString(rsMarking.getString("REFNO")));
+			markingBean.setMARKINGSEQUENCE(StringFormat.nullString(rsMarking.getString("MARKINGSEQUENCE")));
+			markingBean.setMARKINGFROM(StringFormat.nullString(rsMarking.getString("MARKINGFROM")));
+			markingBean.setMARKINGFROMNAME(StringFormat.nullString(rsMarking.getString("MARKINGFROMNAME")));
+			markingBean.setMARKINGTO(StringFormat.nullString(rsMarking.getString("MARKINGTO")));
+			markingBean.setMARKINGTONAME(StringFormat.nullString(rsMarking.getString("MARKINGTONAME")));
+			markingBean.setMARKINGDATE(StringFormat.nullString(rsMarking.getString("MARKINGDATE")));
+			markingBean.setMARKINGREMARK(StringFormat.nullString(rsMarking.getString("MARKINGREMARK")));
+			markingBean.setTARGETDAYS(StringFormat.nullString(rsMarking.getString("TARGETDAYS")));
+			markingBean.setTARGETDATE(StringFormat.nullString(rsMarking.getString("TARGETDATE")));
+			markingBean.setSUBJECTCODE(StringFormat.nullString(rsMarking.getString("SUBJECTCODE")));
+			markingBean.setSUBJECT(StringFormat.nullString(rsMarking.getString("SUBJECT")));
+			markingBean.setACTION(StringFormat.nullString(rsMarking.getString("ACTION")));
+			markingBean.setACTIONDATE(StringFormat.nullString(rsMarking.getString("ACTIONDATE")));
+			
+			markingOutBeanList.add(markingBean);
+			
+		}
+		rsMarking.close();
+		
+	} catch (SQLException e) {
+		log.fatal(e, e);
+	} finally {
+		
+		con.closeConnection();
+	}
+	
+	return markingOutBeanList;
+	
+}
+
+public int setInboxAction(String refId, String action) {
+	
+	int updatestatus=0;
+	
+	DBConnection dbcon =  new DBConnection();
+	try {
+		
+		String strSQLMarking = " INSERT INTO TRNMARKING (REFID, MARKINGSEQUENCE, MARKINGFROM, MARKINGTO, MARKINGDATE, MARKINGREMARK," +
+							   " TARGETDAYS, TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, ACTIONDATE)" +
+							   " SELECT REFID, MARKINGSEQUENCE +1, MARKINGFROM, MARKINGTO, MARKINGDATE, MARKINGREMARK," +
+							   " TARGETDAYS, TARGETDATE, SUBJECTCODE, SUBJECT, '"+action+"', SYSDATE" +
+							   " FROM TRNMARKING A WHERE REFID = '"+refId+"' " +
+							   " AND A. MARKINGSEQUENCE = (SELECT MAX(B.MARKINGSEQUENCE) " +
+							   " FROM TRNMARKING B WHERE B.REFID = A.REFID)  " ;
+		
+		log.debug(strSQLMarking);
+		dbcon.openConnection();
+		updatestatus = dbcon.update(strSQLMarking);
+		
+	} catch (SQLException e) {
+		log.fatal(e, e);
+		dbcon.rollback();
+	} finally {
+		
+		dbcon.closeConnection();
+	}
+	
+	return updatestatus;
+	
+}
+
+
+public ArrayList<TrnMarking> setoutBoxAction(String refId, String outBoxMarkingFrom, String outBoxMarkTo, String outboxMarkingRemark, String targetDate, String subjectCode, String subject, String action) {
+	
+	ArrayList<TrnMarking> markingBeanList =new ArrayList<TrnMarking>();
+	
+	DBConnection dbcon =  new DBConnection();
+	try {
+		
+		dbcon.openConnection();
+		String outBoxMarkingSequence = getNextMarkingSequence(dbcon, "MARKINGSEQUENCE", "TRNMARKING", refId);
+		
+		String markingQuery = " INSERT INTO TRNMARKING (REFID, MARKINGSEQUENCE, MARKINGFROM, MARKINGTO, MARKINGDATE, MARKINGREMARK, "+ 
+									  " TARGETDAYS, TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, ACTIONDATE) " 
+						+ " VALUES ("
+						+ " '"+ refId+ "',"
+						+ " '"+ outBoxMarkingSequence+ "',"
+						+ " '"+ outBoxMarkingFrom+ "',"
+						+ " '"+ outBoxMarkTo+ "',"
+						+ " SYSDATE, "
+						+ " '"+ outboxMarkingRemark+ "',"
+						+ " '15',"
+						+ " TO_DATE('"+ targetDate+ "','DD/MM/YYYY'),"
+						+ " '"+ subjectCode+ "',"
+						+ " '"+ subject+ "', "
+						+ " '"+action+"', "
+						+ " SYSDATE"
+						+ ")";
+		
+				log.debug(markingQuery);
+				dbcon.insert(markingQuery);
+		
+	} catch (Exception e) {
+		log.fatal(e, e);
+		dbcon.rollback();
+	} finally {
+		
+		dbcon.closeConnection();
+	}
+	
+	return markingBeanList;
+	
+}
+
+
+public ArrayList<TrnMarking> setReturnBoxAction(String refId, String returnMarkFrom, String MarkingFrom, String MarkTo, String MarkingRemark, String targetDate, String subjectCode, String subject, String action) {
+	
+	ArrayList<TrnMarking> markingBeanList =new ArrayList<TrnMarking>();
+	
+	DBConnection dbcon =  new DBConnection();
+	try {
+		
+		dbcon.openConnection();
+		
+		String outBoxMarkingSequence = getNextMarkingSequence(dbcon, "MARKINGSEQUENCE", "TRNMARKING", refId);
+		
+		//two entries are saved in table one for receiving and one for forwarding
+		
+		String markingQueryOne = " INSERT INTO TRNMARKING (REFID, MARKINGSEQUENCE, MARKINGFROM, MARKINGTO, MARKINGDATE, MARKINGREMARK, "+ 
+		" TARGETDAYS, TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, ACTIONDATE) " 
+		+ " VALUES ("
+		+ " '"+ refId+ "',"
+		+ " '"+ outBoxMarkingSequence+ "',"
+		+ " '"+ returnMarkFrom+ "',"
+		+ " '"+ MarkingFrom+ "',"
+		+ " SYSDATE, "
+		+ " '"+ MarkingRemark+ "',"
+		+ " '15',"
+		+ " TO_DATE('"+ targetDate+ "','DD/MM/YYYY'),"
+		+ " '"+ subjectCode+ "',"
+		+ " '"+ subject+ "', "
+		+ " 'RCD', "
+		+ " SYSDATE"
+		+ ")";
+		log.debug(markingQueryOne);
+		dbcon.insert(markingQueryOne);
+		
+		
+		outBoxMarkingSequence = getNextMarkingSequence(dbcon, "MARKINGSEQUENCE", "TRNMARKING", refId);
+		
+		String markingQueryTwo = " INSERT INTO TRNMARKING (REFID, MARKINGSEQUENCE, MARKINGFROM, MARKINGTO, MARKINGDATE, MARKINGREMARK, "+ 
+		" TARGETDAYS, TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, ACTIONDATE) " 
+		+ " VALUES ("
+		+ " '"+ refId+ "',"
+		+ " '"+ outBoxMarkingSequence+ "',"
+		+ " '"+ MarkingFrom+ "',"
+		+ " '"+ MarkTo+ "',"
+		+ " SYSDATE, "
+		+ " '"+ MarkingRemark+ "',"
+		+ " '15',"
+		+ " TO_DATE('"+ targetDate+ "','DD/MM/YYYY'),"
+		+ " '"+ subjectCode+ "',"
+		+ " '"+ subject+ "', "
+		+ " '"+action+"', "
+		+ " SYSDATE"
+		+ ")";
+		
+		log.debug(markingQueryTwo);
+		dbcon.insert(markingQueryTwo);
+		
+	} catch (Exception e) {
+		log.fatal(e, e);
+		dbcon.rollback();
+		
+	} finally {
+		
+		dbcon.closeConnection();
+	}
+	
+	return markingBeanList;
+	
+}
+
+	
+	public String saveReference(TrnReference trnRefBean,  ArrayList<TrnMarking> trnMarkingBeanList){
+		String outMessage = "";
+		
+		DBConnection dbcon = new DBConnection();
+		try {
+			dbcon.openConnection();
+
+			//inserting into marking detail table
+			
+			//variable for holding generated ref no and marking
+			String refNoAndMarking = "";
+			
+			for (int i = 0; i < trnMarkingBeanList.size(); i++) {
+				
+				TrnMarking trnMarkingBean = trnMarkingBeanList.get(i);
+				
+				//update OR insert for each row of the table
+				if (trnRefBean.getREFID().trim().length()<=0) {
+					trnRefBean.setREFID(CommonDAO.getNextId(dbcon, "REFID", "TRNREFERENCE" ));
+					trnRefBean.setREFCOUNT(getNextRefCount(dbcon, "REFCOUNT", "TRNREFERENCE", trnRefBean.getTENUREID() ,trnRefBean.getREFCLASS()));
+					log.info("Generated Refcount is  ************* "+trnRefBean.getREFCOUNT() );
+					
+//					trnRefBean.setREFNO(trnRefBean.getREFNO()+"/"+ trnRefBean.getREFCOUNT() + "/"+ Calendar.getInstance().get(Calendar.YEAR));
+					trnRefBean.setREFNO(trnRefBean.getLOGINASROLENAME()+"/" + trnRefBean.getREFCLASS()+"/" + trnRefBean.getREFCOUNT() + "/"+ Calendar.getInstance().get(Calendar.YEAR));
+					
+					//code for linking link ref id
+					if(i==0){
+						trnRefBean.setLINKREFID(trnRefBean.getREFID());
+					}
+					
+					//Insert into Header Table
+				String refQuery = " INSERT INTO TRNREFERENCE ( REFID, TENUREID,  REFNO, ROLEID, REFCLASS, REFCOUNT, INCOMINGDATE, REFERENCENAME," +
+								  " LETTERDATE, ISBUDGET, VIPSTATUS, STATECODE, ACKDATE, ACKBY, REFCATEGORY, LANGUAGE, URGENCY, LINKREFID, NOTECREATOR, SECURITYGRADING," +
+								  " SIGNEDBY, SIGNEDON, REMARKS, ODSPLACE, ODSRAILWAY, ODSDATE, LOGINID, CHANGEDATE, REFERENCEDATE, SUBJECTCODE, SUBJECT)" +
+									" VALUES ("
+								  + " '"+ trnRefBean.getREFID()+ "',"
+								  + " '"+ trnRefBean.getTENUREID()+ "',"
+								  + " '"+ trnRefBean.getREFNO()+ "',"
+								  + " '"+ trnRefBean.getROLEID()+ "',"
+								  + " '"+ trnRefBean.getREFCLASS()+ "',"
+								  + " '"+ trnRefBean.getREFCOUNT()+ "',"
+								  + " TO_DATE('"+ trnRefBean.getINCOMINGDATE()+ "', 'DD/MM/YYYY'),"
+								  + " '"+ trnRefBean.getREFERENCENAME()+ "',"
+								  + " TO_DATE('"+ trnRefBean.getLETTERDATE()+ "', 'DD/MM/YYYY'),"
+								  + " '"+ trnRefBean.getISBUDGET()+ "',"
+								  + " '"+ trnRefBean.getVIPSTATUS()+ "',"
+								  + " '"+ trnRefBean.getSTATECODE()+ "',"
+								  + " TO_DATE('"+ trnRefBean.getACKDATE()+ "', 'DD/MM/YYYY'),"
+								  + " '"+ trnRefBean.getACKBY()+ "',"
+								  + " '"+ trnRefBean.getREFCATEGORY()+ "',"
+								  + " '"+ trnRefBean.getLANGUAGE()+ "',"
+								  + " '"+ trnRefBean.getURGENCY()+ "',"
+								  + " '"+ trnRefBean.getLINKREFID()+ "',"
+								  + " '"+ trnRefBean.getNOTECREATOR()+ "',"
+								  + " '"+ trnRefBean.getSECURITYGRADING()+ "',"
+								  + " '"+ trnRefBean.getSIGNEDBY()+ "',"
+								  + " TO_DATE('"+ trnRefBean.getSIGNEDON()+ "', 'DD/MM/YYYY'),"
+								  + " '"+ trnRefBean.getREMARKS()+ "',"
+								  + " '"+ trnRefBean.getODSPLACE()+ "',"
+								  + " '"+ trnRefBean.getODSRAILWAY()+ "',"
+								  + " TO_DATE('"+ trnRefBean.getODSDATE()+ "', 'DD/MM/YYYY'),"
+								  + " '"+ trnRefBean.getLOGINID()+ "',"
+								  + " SYSDATE, " 
+								  + " SYSDATE, " 
+								  + " '"+ trnMarkingBean.getSUBJECTCODE()+ "',"
+								  + " '"+ trnMarkingBean.getSUBJECT()+ "'"
+								  + ")";
+				
+				log.debug(refQuery);
+				dbcon.insert(refQuery);
+				
+				//insert into Trnmarking
+				trnMarkingBean.setMARKINGSEQUENCE(getNextMarkingSequence(dbcon, "MARKINGSEQUENCE", "TRNMARKING", trnRefBean.getREFID()));
+				String markingQuery = " INSERT INTO TRNMARKING (REFID, MARKINGSEQUENCE, MARKINGFROM, MARKINGTO, MARKINGDATE, MARKINGREMARK, "+ 
+									  " TARGETDAYS, TARGETDATE, SUBJECTCODE, SUBJECT, ACTION, ACTIONDATE) " 
+						+ " VALUES ("
+						+ " '"+ trnRefBean.getREFID()+ "',"
+						+ " '"+ trnMarkingBean.getMARKINGSEQUENCE()+ "',"
+						+ " '"+ trnMarkingBean.getMARKINGFROM()+ "',"
+						+ " '"+ trnMarkingBean.getMARKINGTO()+ "',"
+						+ " SYSDATE,"
+						+ " '"+ trnRefBean.getREMARKS()+ "',"
+						+ " '"+ trnMarkingBean.getTARGETDAYS()+ "',"
+						+ " TO_DATE('"+ trnMarkingBean.getTARGETDATE()+ "','DD/MM/YYYY'),"
+						+ " '"+ trnMarkingBean.getSUBJECTCODE()+ "',"
+						+ " '"+ trnMarkingBean.getSUBJECT()+ "',"
+						+ " 'FOW',"
+						+ " SYSDATE"
+						+ ")";
+		
+				log.debug(markingQuery);
+				dbcon.insert(markingQuery);
+				
+				//set the variable to flash output message
+				refNoAndMarking += "<BR>"+StringFormat.leftPad(i+1+"", 2, ' ' ) +".  &nbsp; &nbsp; " + trnRefBean.getREFNO() + " - " +trnMarkingBean.getMARKINGTO() ;
+				
+				//reset refid to blank so that new refid is generated for next
+				//iteration of the detail tables for markign
+				trnRefBean.setREFID("");
+				trnRefBean.setREFCOUNT("");
+				trnRefBean.setREFNO("");
+					
+					
+				}else{	//if refid is not null then update query
+					
+					// update the header table 
+					String QueryUpdate= " UPDATE TRNREFERENCE SET " +
+//										" REFNO = '"+trnRefBean.getREFNO()+"', " +
+//										" ROLEID = '"+trnRefBean.getROLEID()+"', " +
+//										" REFCLASS = '"+trnRefBean.getREFCLASS()+"', " +
+//										" REFCOUNT = '"+trnRefBean.getREFCOUNT()+"', " +
+										" INCOMINGDATE = TO_DATE('"+trnRefBean.getINCOMINGDATE()+"','DD/MM/YYYY'), " +
+										" REFERENCENAME = '"+trnRefBean.getREFERENCENAME()+"', " +
+										" LETTERDATE = TO_DATE('"+trnRefBean.getLETTERDATE()+"','DD/MM/YYYY'), " +
+										" ISBUDGET = '"+trnRefBean.getISBUDGET()+"', " +
+										" VIPSTATUS = '"+trnRefBean.getVIPSTATUS()+"', " +
+										" STATECODE = '"+trnRefBean.getSTATECODE()+"', " +
+										" ACKDATE = TO_DATE('"+trnRefBean.getACKDATE()+"','DD/MM/YYYY'), " +
+										" ACKBY = '"+trnRefBean.getACKBY()+"', " +
+										" REFCATEGORY = '"+trnRefBean.getREFCATEGORY()+"', " +
+										" LANGUAGE = '"+trnRefBean.getLANGUAGE()+"', " +
+										" URGENCY = '"+trnRefBean.getURGENCY()+"', " +
+										" LINKREFID = '"+trnRefBean.getLINKREFID()+"', " +
+										" NOTECREATOR = '"+trnRefBean.getNOTECREATOR()+"', " +
+										" SECURITYGRADING = '"+trnRefBean.getSECURITYGRADING()+"', " +
+										" SIGNEDBY = '"+trnRefBean.getSIGNEDBY()+"', " +
+										" SIGNEDON = TO_DATE('"+trnRefBean.getSIGNEDON()+"','DD/MM/YYYY'), " +
+										" REMARKS = '"+trnRefBean.getREMARKS()+"', " +
+										" ODSPLACE = '"+trnRefBean.getODSPLACE()+"', " +
+										" ODSRAILWAY = '"+trnRefBean.getODSRAILWAY()+"', " +
+										" ODSDATE = TO_DATE('"+trnRefBean.getODSDATE()+"','DD/MM/YYYY'), " +
+										" LOGINID = '"+trnRefBean.getLOGINID()+"', " +
+										" CHANGEDATE = SYSDATE, " +
+										" SUBJECTCODE = '"+ trnMarkingBean.getSUBJECTCODE()+ "', " +
+										" SUBJECT = '"+ trnMarkingBean.getSUBJECT()+ "' " +
+										" WHERE REFID =  '" + trnRefBean.getREFID()+ "'";
+					
+					log.debug(QueryUpdate);
+					dbcon.update(QueryUpdate);
+					
+					// update the marking table 
+					String QueryUpdateMarking= " UPDATE TRNMARKING SET " +
+										" MARKINGFROM = '"+trnMarkingBean.getMARKINGFROM()+"', " +
+										" MARKINGTO = '"+trnMarkingBean.getMARKINGTO()+"', " +
+										" MARKINGDATE = TO_DATE('"+trnMarkingBean.getMARKINGDATE()+"','DD/MM/YYYY'), " +
+										" MARKINGREMARK = '"+trnMarkingBean.getMARKINGREMARK()+"', " +
+										" TARGETDAYS = '"+trnMarkingBean.getTARGETDAYS()+"', " +
+										" TARGETDATE = TO_DATE('"+trnMarkingBean.getTARGETDATE()+"','DD/MM/YYYY'), " +
+										" SUBJECTCODE = '"+trnMarkingBean.getSUBJECTCODE()+"', " +
+										" SUBJECT = '"+trnMarkingBean.getSUBJECT()+"' " +
+										" WHERE REFID =  '" + trnRefBean.getREFID()+ "' " +
+										" AND MARKINGSEQUENCE = '"+trnMarkingBean.getMARKINGSEQUENCE()+"'";
+					
+					log.debug(QueryUpdateMarking);
+					dbcon.update(QueryUpdateMarking);
+					
+				}
+				
+			} 
+			
+			outMessage = "GRNSave operation successful." + refNoAndMarking;	
+
+		} catch (SQLException sql) {
+			dbcon.rollback();
+			log.fatal(sql, sql);
+			outMessage  = "REDSave operation failure for PCDO Month . " + trnRefBean.getREFNO() + ". ERROR--> " + sql.getMessage();
+			//(new CommonDAO()).generateMessage("TESTLOGIN",outMessage);
+		} finally {
+			dbcon.closeConnection();
+		}
+		
+		return outMessage;
+	}
+	
+	public String saveBudget(ArrayList<TrnBudget> trnBudgetBeanList){
+		String outMessage = "";
+		
+		DBConnection dbcon = new DBConnection();
+		try {
+			dbcon.openConnection();
+			
+			
+			//inserting into marking detail table
+			
+			//variable for holding generated ref no and marking
+			String refNoAndMarking = "";
+			
+			for (int i = 0; i < trnBudgetBeanList.size(); i++) {
+				TrnBudget trnBudgetBean = trnBudgetBeanList.get(i);
+				
+				//delete the previous recode from budget table
+				if(i==0){
+					//delete query
+					String budgetDeleteQRY = "DELETE FROM TRNBUDGET WHERE REFID = '"+trnBudgetBean.getREFID()+"'";
+					log.debug(budgetDeleteQRY);
+					dbcon.delete(budgetDeleteQRY);
+				}
+				
+//				log.info("budget seq : "+ trnBudgetBean.getBUDGETSEQUENCE());
+				//update OR insert for each row of the table
+				if (trnBudgetBean.getBUDGETSEQUENCE().trim().length()<=0) {
+					
+					trnBudgetBean.setBUDGETSEQUENCE(getNextBudgetSequence(dbcon, "BUDGETSEQUENCE", "TRNBUDGET", trnBudgetBean.getREFID()));
+					log.info("Generated Budget Sequence is  ************* "+trnBudgetBean.getBUDGETSEQUENCE()) ;
+				}
+					String budgetQuery = " INSERT INTO TRNBUDGET (REFID,BUDGETSEQUENCE,SUBJECTCODE,SUBJECT,MRREMARK,REMARK,LOGINID,CHANGEDATE) "
+					+ " VALUES ("
+					+ " '"+ trnBudgetBean.getREFID()+ "',"
+					+ " '"+ trnBudgetBean.getBUDGETSEQUENCE()+ "',"
+					+ " '"+ trnBudgetBean.getSUBJECTCODE()+ "',"
+					+ " '"+ trnBudgetBean.getSUBJECT()+ "',"
+					+ " '"+ trnBudgetBean.getMRREMARK()+ "',"
+					+ " '"+ trnBudgetBean.getREMARK()+ "',"
+					+ " '"+ trnBudgetBean.getLOGINID()+ "',"
+					+ " SYSDATE"
+					+ ")";
+					
+					log.debug(budgetQuery);
+					dbcon.insert(budgetQuery);
+			}
+				
+				
+			outMessage = "GRNSave operation successful." + refNoAndMarking;	
+		} catch (SQLException sql) {
+			dbcon.rollback();
+			log.fatal(sql, sql);
+			//outMessage  = "REDSave operation failure for PCDO Month . " + trnBudgetBean.getREFNO() + ". ERROR--> " + sql.getMessage();
+			//(new CommonDAO()).generateMessage("TESTLOGIN",outMessage);
+		} finally {
+			dbcon.closeConnection();
+		}
+		
+		return outMessage;
+	}
+	
+	public String getNextRefCount(DBConnection con, String colName, String tableName, String tenureId, String refClass) {
+		String strSQL = "(SELECT NVL(MAX(A."+colName+"), 0)+ 1 FROM "+tableName+" A WHERE A.TENUREID = '"+tenureId+"' AND A.REFCLASS = '"+refClass+"')";
+		log.debug(strSQL);
+		return getStringParam(strSQL, con);
+	}
+	public String getNextBudgetSequence(DBConnection con, String colName, String tableName, String refID) {
+		String strSQL = "(SELECT NVL(MAX(A."+colName+"), 0)+ 1 FROM "+tableName+" A WHERE A.REFID = '"+refID+"')";
+		log.debug(strSQL);
+		return getStringParam(strSQL, con);
+	}
+	
+	public String getNextMarkingSequence(DBConnection con, String colName, String tableName, String refId) {
+		String strSQL = "(SELECT NVL(MAX(A."+colName+"), 0)+ 1 FROM "+tableName+" A WHERE REFID = '"+refId+"')";
+		log.debug(strSQL);
+		return getStringParam(strSQL, con);
+	}
+	
+	public String getStringParam(String strSQL, DBConnection con) {
+		String param = "";
+		try {
+			ResultSet rs = con.select(strSQL);
+			if (rs.next()) {
+				param = handleNull(rs.getString(1));
+			}
+			rs.close();
+		} catch (Exception e) {
+			log.fatal(e, e);
+		}
+		return param;
+	}
+	
+	public String handleNull(String str) {
+		return str != null ? CommonDAO.numberFormet(str) : "";
+	}
+
+	public void clearForm() {
+		
+	}
+	
+/*	public ArrayList<CommonBean> getTreeview(String refId) {
+		String strSQL = "";
+		try {
+			   
+			d.add(31047,-1,'<span class=\"treespan\" name=\"treespan\" style=\"color:'+col[2]+';\">SSE/PW/MTJ(S)</span>','2~031047');
+			d.add(31103,31047,'<span class=\"treespan\" name=\"treespan\" style=\"color:'+col[1]+';\">JE/PW/BAAD</span>','1~031103');
+			d.add(31104,31047,'<span class=\"treespan\" name=\"treespan\" style=\"color:'+col[1]+';\">JE/PW/BFP</span>','1~031104');
+			d.add(31112,31047,'<span class=\"treespan\" name=\"treespan\" style=\"color:'+col[1]+';\">JE/PW/MTJ YD</span>','1~031112');
+			d.add(31232,31047,'<span class=\"treespan\" name=\"treespan\" style=\"color:'+col[1]+';\">JE/PW/BAD-YARD</span>','1~031232');
+			
+			strSQL = " SELECT 'd.add('||(ROWNUM )||','||-1||','||''''||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'||(SELECT B.ROLENAME FROM MSTROLE B WHERE B.ROLEID = (SELECT C.ROLEID FROM MSTTENURE C WHERE C.TENUREID = A.MARKINGFROM))||' ( On - '||TO_CHAR(MARKINGDATE,'DD/MM/YYYY HH24:MI:SS')||')'||'</span>' ||''''||','||''''||MARKINGSEQUENCE||''''||');' TREEVIEW, MARKINGSEQUENCE FROM TRNMARKING A WHERE A.REFID = '"+refId+"' AND A.MARKINGSEQUENCE ='1' " +
+					 " UNION " +
+					 " SELECT 'd.add('||(ROWNUM+1)||','||(ROWNUM)||','||''''||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'||(SELECT B.ROLENAME FROM MSTROLE B WHERE B.ROLEID = (SELECT C.ROLEID FROM MSTTENURE C WHERE C.TENUREID = A.MARKINGTO))||' ( On - '||TO_CHAR(MARKINGDATE,'DD/MM/YYYY HH24:MI:SS')||')'||'</span>' ||''''||','||''''||MARKINGSEQUENCE||''''||');' TREEVIEW , MARKINGSEQUENCE FROM TRNMARKING A WHERE A.REFID = '"+refId+"'  AND ACTION='FOW' " +
+					 " ORDER BY MARKINGSEQUENCE " ;
+
+			log.debug("TREE  - " + strSQL);
+		} catch (Exception e) {
+			log.fatal(e, e);
+		} finally {
+		}
+		return (new CommonDAO()).getSQLResult(strSQL, 1);
+	}*/
+	
+	public ArrayList<CommonBean> getTreeview(String refId) {
+		String strSQL = "";
+		try {
+			   
+					
+		/*strSQL = " SELECT 'd.add('||MARKINGSEQUENCE||','||(-1)||','||''''||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'||(SELECT B.ROLENAME FROM MSTROLE B WHERE B.ROLEID = (SELECT C.ROLEID FROM MSTTENURE C WHERE C.TENUREID = A.MARKINGFROM))||'   - Forwared on  '||TO_CHAR(MARKINGDATE,'DD/MM/YYYY HH24:MI:SS')||')'||'</span>' ||''''||','||''''||MARKINGSEQUENCE||''''||');' TREEVIEW, A.MARKINGSEQUENCE-1, markingfrom, markingto , ACTION FROM TRNMARKING A WHERE REFID='"+refId+"' AND MARKINGSEQUENCE=1" +
+				 " UNION " +
+				 " SELECT 'd.add('||(rownum+1)||','||(case when action='RCD' then (rownum-1) else rownum end )||','||''''||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'" +
+				 " || (SELECT B.ROLENAME FROM MSTROLE B WHERE B.ROLEID = (SELECT C.ROLEID FROM MSTTENURE C WHERE C.TENUREID = A.MARKINGTO))" +
+				 " || '   - '|| (SELECT FNAME FROM MSTGEC WHERE CODETYPE = '4' AND CODE = DECODE(ACTION, 'FOW', 'RCD', 'RCD', 'FOW')) ||' on '||TO_CHAR(MARKINGDATE,'DD/MM/YYYY HH24:MI:SS')||''||'</span>' ||''''||','||''''||MARKINGSEQUENCE||''''||');' TREEVIEW,A.MARKINGSEQUENCE," +
+				 " markingfrom,markingto, ACTION FROM TRNMARKING A WHERE REFID='"+refId+"' ORDER BY 2";*/
+		strSQL = " SELECT 'd.add('||DECODE(X.CHILD, NULL, (Y.CHILD-1), X.CHILD)||','" +
+				 " ||DECODE(X.PARENT, NULL, (Y.PARENT-1), X.PARENT)||','||''''" +
+				 " ||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'" +
+				 " ||DECODE(X.MARKINGTO, NULL, (Y.MARKINGFROM), X.MARKINGTO) || '   - '" +
+				 " ||NVL(Y.ACTION, 'Pending') ||' on '" +
+				 " ||TO_CHAR(DECODE(Y.ACTIONDATE, NULL, (X.ACTIONDATE), Y.ACTIONDATE),'DD/MM/YYYY HH24:MI:SS') " +
+				 " ||''||'</span>' ||''''||','||''''||rownum||''''||');' TREEVIEW " +
+				 " FROM " +
+				 " 	(SELECT MARKINGSEQUENCE CHILD, (MARKINGSEQUENCE - 1) PARENT,  GETROLENAME(MARKINGFROM) MARKINGFROM," +
+				 "	GETROLENAME(MARKINGTO) MARKINGTO, (SELECT FNAME FROM MSTGEC WHERE CODETYPE = 4 AND CODE = ACTION) ACTION , ACTIONDATE" +
+				 "	FROM TRNMARKING A WHERE REFID='"+refId+"' ) X FULL JOIN" +
+				 "	(SELECT MARKINGSEQUENCE CHILD, (MARKINGSEQUENCE - 1) PARENT,  GETROLENAME(MARKINGFROM) MARKINGFROM," +
+				 "	GETROLENAME(MARKINGTO) MARKINGTO, (SELECT FNAME FROM MSTGEC WHERE CODETYPE = 4 AND CODE = ACTION) ACTION , ACTIONDATE" +
+				 "	FROM TRNMARKING A WHERE REFID='"+refId+"' )  Y ON X.CHILD = Y.PARENT";
+		
+			log.debug("TREE  - " + strSQL);
+		} catch (Exception e) {
+			log.fatal(e, e);
+		} finally {
+		}
+		return (new CommonDAO()).getSQLResult(strSQL, 1);
+	}
+	public ArrayList<CommonBean> getTreeviewReminder(String refId) {
+		String strSQL = "";
+		try {
+			
+			
+			/*strSQL = " SELECT 'd1.add('||MARKINGSEQUENCE||','||(-1)||','||''''||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'||(SELECT B.ROLENAME FROM MSTROLE B WHERE B.ROLEID = (SELECT C.ROLEID FROM MSTTENURE C WHERE C.TENUREID = A.MARKINGFROM))||'   - Forwared on  '||TO_CHAR(MARKINGDATE,'DD/MM/YYYY HH24:MI:SS')||')'||'</span>' ||''''||','||''''||MARKINGSEQUENCE||''''||');' TREEVIEW, A.MARKINGSEQUENCE-1, markingfrom, markingto , ACTION FROM TRNMARKING A WHERE REFID='"+refId+"' AND MARKINGSEQUENCE=1" +
+				 " UNION " +
+				 " SELECT 'd1.add('||(rownum+1)||','||(case when action='RCD' then (rownum-1) else rownum end )||','||''''||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'" +
+				 " || (SELECT B.ROLENAME FROM MSTROLE B WHERE B.ROLEID = (SELECT C.ROLEID FROM MSTTENURE C WHERE C.TENUREID = A.MARKINGTO))" +
+				 " || '   - '|| (SELECT FNAME FROM MSTGEC WHERE CODETYPE = '4' AND CODE = DECODE(ACTION, 'FOW', 'RCD', 'RCD', 'FOW')) ||' on '||TO_CHAR(MARKINGDATE,'DD/MM/YYYY HH24:MI:SS')||''||'</span>' ||''''||','||''''||MARKINGSEQUENCE||''''||');' TREEVIEW,A.MARKINGSEQUENCE," +
+				 " markingfrom,markingto, ACTION FROM TRNMARKING A WHERE REFID='"+refId+"' ORDER BY 2";*/
+			strSQL = " SELECT 'd1.add('||DECODE(X.CHILD, NULL, (Y.CHILD-1), X.CHILD)||','" +
+			" ||DECODE(X.PARENT, NULL, (Y.PARENT-1), X.PARENT)||','||''''" +
+			" ||'<span class=\"treespan\" name=\"treespan\" style=\"color:''+col['||2||']+'';\">'" +
+			" ||DECODE(X.MARKINGTO, NULL, (Y.MARKINGFROM), X.MARKINGTO) || '   - '" +
+			" ||NVL(Y.ACTION, 'Pending') ||' on '" +
+			" ||TO_CHAR(DECODE(Y.ACTIONDATE, NULL, (X.ACTIONDATE), Y.ACTIONDATE),'DD/MM/YYYY HH24:MI:SS') " +
+			" ||''||'</span>' ||''''||','||''''||rownum||''''||');' TREEVIEW " +
+			" FROM " +
+			" 	(SELECT MARKINGSEQUENCE CHILD, (MARKINGSEQUENCE - 1) PARENT,  GETROLENAME(MARKINGFROM) MARKINGFROM," +
+			"	GETROLENAME(MARKINGTO) MARKINGTO, (SELECT FNAME FROM MSTGEC WHERE CODETYPE = 4 AND CODE = ACTION) ACTION , ACTIONDATE" +
+			"	FROM TRNMARKING A WHERE REFID='"+refId+"' ) X FULL JOIN" +
+			"	(SELECT MARKINGSEQUENCE CHILD, (MARKINGSEQUENCE - 1) PARENT,  GETROLENAME(MARKINGFROM) MARKINGFROM," +
+			"	GETROLENAME(MARKINGTO) MARKINGTO, (SELECT FNAME FROM MSTGEC WHERE CODETYPE = 4 AND CODE = ACTION) ACTION , ACTIONDATE" +
+			"	FROM TRNMARKING A WHERE REFID='"+refId+"' )  Y ON X.CHILD = Y.PARENT";
+			
+			log.debug("TREE  - " + strSQL);
+		} catch (Exception e) {
+			log.fatal(e, e);
+		} finally {
+		}
+		return (new CommonDAO()).getSQLResult(strSQL, 1);
+	}
+	
+public String saveFractureImage(String refID, String subject, String name)	{
+			String filepath = "";
+			String strSQL = "";
+			String nextimageid = "";
+			DBConnection dbcon = new DBConnection();
+			try	{
+				dbcon.openConnection();
+				log.debug("saveFractureImage");
+				strSQL = "SELECT (NVL(MAX(ATTACHMENTID),0)+1) FROM TRNATTACHMENT WHERE REFID ='" + refID + "'";							
+				log.debug(strSQL);
+				ResultSet rs = dbcon.select(strSQL);
+				if(rs.next()){
+					nextimageid = rs.getString(1);
+				}
+				strSQL = " INSERT INTO TRNATTACHMENT (REFID, ATTACHMENTID, ORIGINALFILENAME, PATH)" +
+						 " VALUES ('" + refID + "','1', '" + name + "','" + subject + "')";
+				log.debug(strSQL);
+				dbcon.insert(strSQL);
+			}catch (Exception e) {
+	    		dbcon.rollback();
+	    		e.printStackTrace();
+			}finally{
+				dbcon.commit();
+				dbcon.closeConnection();
+			}
+			filepath = refID + "_" + nextimageid + name.substring(name.lastIndexOf("."));
+			return filepath;
+		}
+	  	
+public String deleteRefImage(String refID, String attachmentID){
+	String isDataSaved = "0~Can not delete.";
+	DBConnection con = new DBConnection();
+	try {
+		con.openConnection();
+		String strSQL = "";
+		strSQL = " DELETE FROM TRNATTACHMENT WHERE REFID = '" + refID + "' AND ATTACHMENTID = '" + attachmentID + "'";
+		log.debug(strSQL);
+		con.update(strSQL);
+		isDataSaved = "1~Deleted Successfully.";
+	}catch(Exception e) {
+		con.rollback();
+		isDataSaved = "0~Can not delete.";
+		log.fatal(e, e);
+	}finally {
+		con.closeConnection();
+	}
+	return isDataSaved;
+	}	
+
+public ArrayList<CommonBean> getReminderData(String refid)
+{
+	String strSQL = " SELECT REFID, TO_CHAR(REMINDERDATE,'DD/MM/YYYY') REMINDERDATE, REMINDERREMARK, REMINDERACTION, " +
+					" TO_CHAR(REMINDERACTIONDATE,'DD/MM/YYYY') REMINDERACTIONDATE, TO_CHAR(CHANGEDATE,'DD/MM/YYYY') CHANGEDATE, "+
+					" (SELECT SNAME FROM MSTGEC WHERE CODETYPE = 5 AND CODE = REMINDERTYPE) REMINDERTYPE, SIGNEDBY, TO_CHAR(SIGNEDON,'DD/MM/YYYY') SIGNEDON, WM_CONCAT(REMINDERTO) AS SENTTO FROM ( "+
+					" SELECT REFID, REMINDERDATE, REMINDERREMARK, REMINDERACTION, REMINDERACTIONDATE, CHANGEDATE, "+
+					" REMINDERTYPE, SIGNEDBY, SIGNEDON, (SELECT ROLENAME FROM MSTROLE X WHERE X.ROLEID = REMINDERTO) REMINDERTO "+ 
+					" FROM TRNREMINDER WHERE REFID='"+refid+"' ORDER BY REFID ) "+
+					" GROUP BY REFID, REMINDERDATE, REMINDERREMARK, REMINDERACTION, REMINDERACTIONDATE, "+
+					" CHANGEDATE, REMINDERTYPE, SIGNEDBY, SIGNEDON ";
+	return (new CommonDAO()).getSQLResult(strSQL, 10);
+}
+
+public String saveReminder(String refId, String reminderFrom, String reminderType, String signedBy, String signedOn, String reminderRemark,String tenureId, String loginid) {
+	
+	int updcount = 0;
+	String strSQL = "";
+	String SUBJECT = "";
+	String SUBJECTCODE = "";
+	String REMINDERTO = "";
+	String TARGETDAYS = "";
+	String TARGETDATE = "";
+	DBConnection dbcon =  new DBConnection();
+	try {
+		dbcon.openConnection();
+		strSQL = " SELECT MARKINGTO, SUBJECTCODE, SUBJECT, TARGETDAYS, TO_CHAR(TARGETDATE,'DD/MM/YYYY') FROM TRNMARKING WHERE REFID IN " +
+				 " (SELECT REFID FROM TRNREFERENCE WHERE LINKREFID IN (SELECT LINKREFID FROM TRNREFERENCE WHERE REFID = '"+refId+"')) " +
+				 " AND MARKINGFROM = '"+tenureId+"' AND MARKINGSEQUENCE = (SELECT MIN(MARKINGSEQUENCE) FROM TRNMARKING WHERE REFID IN " +
+				 " (SELECT REFID FROM TRNREFERENCE WHERE LINKREFID IN  (SELECT LINKREFID FROM TRNREFERENCE WHERE REFID = '"+refId+"')) " +
+				 " AND MARKINGFROM = '"+tenureId+"'AND ACTION NOT IN ('NOR', 'RET')) AND ACTION IN ('RCD', 'FOW') " +
+				 " ORDER BY REFID, MARKINGSEQUENCE";
+		ResultSet rs = dbcon.select(strSQL);
+		while(rs.next())
+		{
+			REMINDERTO = handleNull(rs.getString(1));
+			SUBJECT = handleNull(rs.getString(3));
+			SUBJECTCODE = handleNull(rs.getString(2));
+			TARGETDAYS = handleNull(rs.getString(4));
+			TARGETDATE = handleNull(rs.getString(5));
+			
+			strSQL = " INSERT INTO TRNREMINDER (REFID, REMINDERSEQUENCE, REMINDERFROM, REMINDERTO, REMINDERDATE, REMINDERREMARK, " +
+					 " REMINDERACTION, REMINDERACTIONDATE, LOGINID, CHANGEDATE, TARGETDAYS, TARGETDATE, SUBJECTCODE, SUBJECT, " +
+					 " REMINDERTYPE, SIGNEDBY, SIGNEDON) VALUES ('"+refId+"', (SELECT (NVL(MAX(REMINDERSEQUENCE),0)+1) FROM " +
+					 " TRNREMINDER WHERE REFID ='" + refId + "'), '"+reminderFrom+"', '"+REMINDERTO+"', SYSDATE, '"+reminderRemark+"'," +
+					 " 'FOW', SYSDATE, '"+loginid+"',SYSDATE, '"+TARGETDAYS+"',TO_DATE('"+TARGETDATE+"','DD/MM/YYYY'), '"+SUBJECTCODE+"', " +
+					 " '"+SUBJECT+"', '"+reminderType+"', '"+signedBy+"', TO_DATE('"+signedOn+"','DD/MM/YYYY'))";
+			log.debug(strSQL);
+			Statement stmt = dbcon.getConnection().createStatement();
+			updcount = stmt.executeUpdate(strSQL);
+		}
+		rs.close();
+		
+	} catch (Exception e) {
+		log.fatal(e, e);
+		dbcon.rollback();
+	} finally {
+		dbcon.closeConnection();
+	}
+	  return updcount+"";
+	}
+
+	
+	public ArrayList<CommonBean> getAttachFiles(String refid) {
+		String strSQL = "SELECT ATTACHMENTID, REFID, ORIGFILENAME, GENFILENAME, (SUBSTR(ORIGFILENAME,INSTR(ORIGFILENAME,'.',-1))) FILEEXT FROM TRNATTACHMENT WHERE REFID='"
+				+ refid + "' order by 3,4 ";
+		return (new CommonDAO()).getSQLResult(strSQL, 5);
+	}
+
+}

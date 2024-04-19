@@ -1,0 +1,261 @@
+body {
+background-color:#FFFBF0;
+margin:0; padding:0;
+ 
+}
+
+.menuHomeDiv
+{
+	cursor:pointer;
+	color: #FFF;
+	background-image: url('../butt.gif');
+	display: block;
+	float: left;
+	margin-right: 1px;
+	padding-right: 5px;
+	padding-left: 5px;
+	height: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin-top: 2px;
+	margin-bottom: 5px;
+}
+
+.error{
+background-color:  yellow;
+}
+.treven{
+background-color:  #e8f0de;
+}
+.pxing{
+background-color:  #ffffff;
+}
+.trodd{
+background-color:  #f4f9f0;
+}
+.treven1{
+background-color:  #F5F5F3;
+}
+.trodd1{
+background-color:  #FFFFDF;
+}
+.drop {
+	background-color: #EFE9BA;
+	border: 1px solid #800000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	padding-top: 1px;
+	padding-bottom: 1px; rect ( );
+	padding-left: 1px;
+	background-position: 22px
+}
+
+.pageheader,caption {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: left;
+	background-image: url("../tms.images/dotted_line.gif");
+	background-repeat: repeat-x;
+	background-position: center;
+	padding-bottom: 15px;
+	color: #000066;
+	white-space: normal;
+}
+
+.formheader,tbody, address a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	white-space: normal;
+	font-weight: bold;	
+}
+
+.formtext {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000000;
+}
+.formtextbold {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #0000ff;
+}
+
+.text {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: normal;
+	color: #333333;
+}
+
+tr{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	white-space: normal;
+	font-weight: bold;
+}
+th {
+	background-color: #DB8371;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	white-space: normal;
+	font-weight: bold;
+	border: solid 1px white;
+	color: #000000;
+}
+td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	white-space: normal;
+	font-weight: bold;
+	empty-cells: show;
+	
+}
+INPUT,SELECT {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: normal;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 1px solid #978F8F;
+	
+}
+img
+{
+vertical-align: middle;
+}
+.inputgreyed {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #000000;
+	background-color: #D3D3D3;
+	border: 1px solid #666666;
+}
+
+.butts {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #7b150d;
+	height: 19px;
+	float: none;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFFFFF;
+	border-right-color: #FFFFFF;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+}
+
+.butts1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #333333;
+	background-color: #DCD3B0;
+	float: none;
+	border: 1px solid #000000;
+
+}
+.butts2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: white;
+	background-color: green;
+	float: none;
+	border: 1px solid #000000;
+	
+
+}
+#data {
+	border: solid 1px #C56F5C;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	margin-bottom: 10px; 
+}
+
+#data td,#reportHeader #data{
+	border-top: solid 1px #C56F5C;
+	border-right: solid 1px #C56F5C;
+	height: 10px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+
+
+.today {COLOR: black; FONT-FAMILY: sans-serif; FONT-SIZE: 10pt; FONT-WEIGHT: bold; TEXT-ALIGN: right}
+.days {COLOR: navy; FONT-FAMILY: sans-serif; FONT-SIZE: 10pt; FONT-WEIGHT: bold; TEXT-ALIGN: center}
+.dates {COLOR: black; FONT-FAMILY: sans-serif; FONT-SIZE: 10pt; TEXT-ALIGN: right}
+
+.readonly{
+/*background-color: #efefef;*/
+background-color: #EFE9BA;
+}
+.transparent_class {
+filter:alpha(opacity=40);
+-moz-opacity:0.4;
+-khtml-opacity: 0.4;
+opacity: 0.4;
+} 
+#tblt1d1 {
+	border: solid 1px #C56F5C;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+#tblt1d1 td,#reportHeader #tblt1d1{
+	border-top: solid 1px #C56F5C;
+	border-right: solid 1px #C56F5C;
+	height: 10px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+.helpbutt {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #FFFBF0;
+	height: 19px;
+	float: none;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFFFFF;
+	border-right-color: #FFFFFF;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+	width: 20px;
+	background-image: url(../tms.images/help.gif);
+}
+.GRN {
+	color:green;
+	font-size:10px;
+	font-weight:bold;
+}
+.RED {
+	color:red;
+	font-size:10px;
+	font-weight:bold;
+}
+.BLU {
+	color:blue;
+	font-size:10px;
+	font-weight:bold;
+}

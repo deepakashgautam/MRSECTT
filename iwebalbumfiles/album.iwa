@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<album>
+  <info>
+    <title>My Web Photo Album</title>
+    <comments>Album Comments
+</comments>
+    <output>C:\Documents and Settings\rohit\My Documents\mywebalbum</output>
+    <photosize>1</photosize>
+    <url>http://</url>
+  </info>
+  <photo>
+    <title>5 (2)</title>
+    <comments></comments>
+    <filename>C:\Documents and Settings\rohit\My Documents\My Pictures\Google Talk Received Images\5 (2).jpg</filename>
+    <rotateinfo></rotateinfo>
+    <flip_v_info></flip_v_info>
+    <flip_h_info></flip_h_info>
+  </photo>
+  <photo>
+    <title>4103878981-edt-ph-9-20091224-224232</title>
+    <comments></comments>
+    <filename>C:\Documents and Settings\rohit\My Documents\My Pictures\Google Talk Received Images\4103878981-edt-ph-9-20091224-224232.jpg</filename>
+    <rotateinfo></rotateinfo>
+    <flip_v_info></flip_v_info>
+    <flip_h_info></flip_h_info>
+  </photo>
+</album>

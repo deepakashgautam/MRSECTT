@@ -1,0 +1,64 @@
+ <Configure class="org.eclipse.jetty.webapp.WebAppContext">
+ 
+  <New id="DSTest" class="org.eclipse.jetty.plus.jndi.Resource">
+   <Arg></Arg>
+   <Arg>jndi/MRSECTT_local</Arg>
+   <Arg>
+    <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
+       <Set name="driverClass">oracle.jdbc.OracleDriver</Set>
+       <!-- <Set name="jdbcUrl">jdbc:oracle:thin:@10.64.25.24:1521:wpmsnew</Set>   --> 
+       <Set name="jdbcUrl">jdbc:oracle:thin:@172.16.21.67:1521:orcl</Set>  
+       <Set name="user">rfmsbackup</Set>
+       <Set name="password">rfmsbackup</Set>
+    </New>
+   </Arg>
+  </New>
+    <New id="DSTest3" class="org.eclipse.jetty.plus.jndi.Resource">
+   <Arg></Arg>
+   <Arg>jdbc/qrtz_edrishti</Arg>
+   <Arg>
+    <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
+       <Set name="driverClass">oracle.jdbc.OracleDriver</Set>
+       <Set name="jdbcUrl">jdbc:oracle:thin:@172.16.21.67:1521:orcl</Set>
+       <Set name="user">qrtz_edrishti</Set>
+       <Set name="password">qrtz_edrishti</Set>
+    </New>
+   </Arg>
+  </New>
+   <New id="DSTest2" class="org.eclipse.jetty.plus.jndi.Resource">
+   <Arg></Arg>
+   <Arg>jndi/mrappt</Arg>
+   <Arg>
+    <New class="com.mchange.v2.c3p0.ComboPooledDataSource">
+       <Set name="driverClass">oracle.jdbc.OracleDriver</Set>
+       <!-- <Set name="jdbcUrl">jdbc:oracle:thin:@10.64.25.24:1521:wpmsnew</Set> -->
+        <Set name="jdbcUrl">jdbc:oracle:thin:@172.16.21.67:1521:orcl</Set> 
+       <Set name="user">mrappt</Set>
+       <Set name="password">mrappt</Set>
+    </New>
+   </Arg>
+  </New>
+  <New id="DSTest" class="org.eclipse.jetty.plus.jndi.Resource">
+  <Arg></Arg>
+  <Arg>jdbc/edrishti1</Arg>
+  <Arg>
+    <New class="oracle.jdbc.pool.OracleDataSource">
+      <Set name="DriverType">thin</Set>
+      <Set name="URL">jdbc:oracle:thin:@172.16.21.67:1521:otcd</Set>
+      <Set name="User">edrishti</Set>
+      <Set name="Password">edrishti</Set>
+      <Set name="connectionCachingEnabled">true</Set>
+      <Set name="connectionCacheProperties">
+        <New class="java.util.Properties">
+          <Call name="setProperty">
+            <Arg>MinLimit</Arg>
+            <Arg>5</Arg>
+          </Call>
+          <!-- put the other properties in here too -->
+        </New>
+      </Set>
+    </New>
+  </Arg>
+</New>
+  
+  </Configure>

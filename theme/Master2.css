@@ -1,0 +1,681 @@
+ body {
+	
+	background-color : white;
+	margin-top: 0px;
+}
+
+.error {
+	background-color: yellow;
+}
+
+.treven {
+	background-color:#FBE6D7 ;
+}
+
+.trevenRight {
+	background-color: #FFFFFF;
+}
+
+textarea {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}
+
+.trodd {
+	
+	background-color: #FDF4EE;
+}
+
+.trevenblue {
+	background-color: #E0E0F8;
+}
+
+.troddblue {
+	background-color: #EFF8FB;
+}
+
+.trwhite {
+	background-color: #FFFFFF;
+}
+
+.treven1 {
+	background-color: #F5F5F3;
+}
+
+.trodd1 {
+	background-color: #FFFFDF;
+}
+
+.drop {
+	background-color: #EFE9BA;
+	border: 1px solid #800000;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	font-weight: normal;
+	padding-top: 1px;
+	padding-bottom: 1px; rect ( );
+	padding-left: 1px;
+	background-position: 22px
+}
+
+.pageheader,caption {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: left;
+	background-image: url("/MRSECTT/theme/dotted_line.gif");
+	background-repeat: repeat-x;
+	background-position: center;
+	padding-bottom: 15px;
+	color: #000066;
+	white-space: normal;
+}
+
+.formheader,tbody {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	white-space: normal;
+	font-weight: bold;
+}
+
+.formtext {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+}
+
+.formtextbold {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #0000ff;
+}
+
+.text {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: normal;
+	color: #333333;
+}
+
+tr {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	white-space: normal;
+	font-weight: bold;
+}
+
+th {
+	background-color: #FBE6D7;
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	white-space: normal;
+	font-weight: bold;
+	border: solid 1px white;
+	color: #000000;
+}
+
+td {
+	font-family: Tahoma, Arial;
+	FONT-SIZE: 13px;
+	white-space: normal;
+	font-weight: normal;
+	empty-cells: show;
+}
+
+INPUT {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	height: 20px;
+	color: #000000;
+	background-color: #FFFFFF;
+	border-color: #6A9CE1;
+}
+
+img {
+	vertical-align: middle;
+}
+
+.inputgreyed {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	font-weight: normal;
+	color: #000000;
+	background-color: #D3D3D3;
+	border: 1px solid #666666;
+}
+
+.butts {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #7b150d;
+	height: 19px;
+	float: none;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFFFFF;
+	border-right-color: #FFFFFF;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+}
+
+.buttsS {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #ce5800;
+	height: 19px;
+	float: none;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFFFFF;
+	border-right-color: #FFFFFF;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+}
+
+.butts1 {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	color: #333333;
+	background-color: #DCD3B0;
+	float: none;
+	border: 0px solid #000000;
+}
+
+.buttNew {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	color: #333333;
+	background-color: #DCD3B0;
+	float: none;
+	border: 1px solid #000000;
+	background-image: url('/MRSECTT/images/New.png');
+	width: 70px;
+	height: 25px;
+	border:0; 
+}
+
+.buttSave {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	color: #333333;
+	background-color: #DCD3B0;
+	float: none;
+	border: 1px solid #000000;
+	background-image: url('/MRSECTT/images/Save.png');
+	width: 70px;
+	height: 25px;
+	border:0; 
+}
+
+.buttClear {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	color: #333333;
+	background-color: #DCD3B0;
+	float: none;
+	border: 1px solid #000000;
+	background-image: url('/MRSECTT/images/Clear.png');
+	width: 70px;
+	height: 25px;
+	border:0; 
+}
+.calbutt {
+	background-color: transparent;
+	border : 0px;
+	height: 16px;
+	float: none;
+	width: 16px;
+	vertical-align: top;
+	background-image: url(/MRSECTT/images/cal.gif);
+}
+
+.delbutt {
+	background-color: transparent;
+	border : 0px;
+	height: 18px;
+	float: none;
+	width: 18px;
+	vertical-align: middle;
+	cursor: pointer;
+	background-image: url(/MRSECTT/images/trash_red_full.png);
+}
+
+#data {
+	border: solid 1px #FFFFFF;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
+#data td {
+	border-top: solid 1px #FFFFFF;
+	border-right: solid 1px #FFFFFF;
+	height: 10px;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+table TABLE {
+	margin-top: 10PX;
+}
+
+
+
+
+.today {
+	COLOR: black;
+	FONT-FAMILY: Tahoma;
+	FONT-SIZE: 10pt;
+	FONT-WEIGHT: bold
+}
+
+.days {
+	COLOR: navy;
+	FONT-FAMILY: Tahoma;
+	FONT-SIZE: 12pt;
+	FONT-WEIGHT: bold;
+	TEXT-ALIGN: center
+}
+
+.dates {
+	COLOR: black;
+	FONT-FAMILY: Tahoma;
+	FONT-SIZE: 12pt
+}
+
+.readonly {
+	background-color: #efefef;
+}
+
+.transparent_class {
+	filter: alpha(opacity = 70);
+	-moz-opacity: 0.7;
+	-khtml-opacity: 0.7;
+	opacity: 0.7;
+}
+
+.iconhead a:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #095bad;
+	text-align: center;
+	text-decoration: underline;
+}
+
+.hover { 
+     
+    background-color: lightgrey; border: 1px #000000 solid;
+} 
+
+
+.iconname {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #404040;
+	text-align: center;
+}
+
+.iconname1 {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #EE934F;
+	text-align: center;
+}
+
+* Main Content Table Starts * /
+#TopLeftCor {
+	background:
+		url(${pageContext.request.contextPath}/images/top-left-cor.gif)
+		no-repeat;
+	width: 13px;
+	height: 13px;
+}
+
+#TopRtCor {
+	background:
+		url(${pageContext.request.contextPath}/images/top-rt-cor.gif)
+		no-repeat;
+	width: 13px;
+	height: 13px;
+}
+
+#TopCenBg {
+	background:
+		url(${pageContext.request.contextPath}/images/top-cen-bg.gif) repeat-x
+		;
+	height: 13px;
+}
+
+#TableLeftBg {
+	background:
+		url(${pageContext.request.contextPath}/images/tab-left-bg.gif)
+		repeat-y;
+	width: 13px;
+}
+
+#TableRightBg {
+	background: url(${pageContext.request.contextPath}/images/tab-rt-bg.gif)
+		repeat-y;
+	width: 14px;
+	height: 13px;
+}
+
+#BttmLeftCor {
+	background: url(/MRSECTT/theme/bttm-left-cor.gif) no-repeat;
+	width: 13px;
+	height: 37px;
+}
+
+#BttmRtCor {
+	background: url(/MRSECTT/theme/bttm-rt-cor.gif) no-repeat;
+	width: 13px;
+	height: 37px;
+}
+
+#BttmCenBg {
+	background: url(/MRSECTT/theme/bttm-cen-bg.gif) repeat-x;
+	height: 37px;
+}
+
+#MainTableContentBg {
+	background: url(/MRSECTT/theme/main-tab-content-bg.gif) repeat-x;
+	background-color: #fffaf6;
+}
+
+#TopMenuLeftCor {
+	background: url(/MRSECTT/theme/top-menu-let-cor.gif) no-repeat;
+	height: 25px;
+	width: 10px;
+	background-position: bottom;
+}
+
+#TopMenuRightCor {
+	background: url(/MRSECTT/theme/top-menu-rt-cor.gif) no-repeat;
+	height: 25px;
+	width: 10px;
+	background-position: bottom;
+}
+
+#TopMenuCenterBg {
+	background: url(/MRSECTT/theme/top-menu-cen-bg.gif) repeat-x;
+	height: 25px;
+	width: 100%;
+	background-position: bottom;
+}
+
+.WelcomeUser .Top {
+	font-family: Tahoma;
+	font-size: 13px;
+	color: #FFFFFF;
+	line-height: 22px;
+	width: 220px;
+}
+
+.WelcomeUser {
+	font-family: Tahoma;
+	font-size: 13px;
+	color: #FFFFFF;
+	line-height: 22px;
+}
+
+pre {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.FormLableText,#data td,th,#reportHeader #data {
+	border: solid 1px white;
+	font-family: Tahoma;
+	FONT-SIZE: 12px;
+	font-weight: bold;
+	padding-right: 2px;
+	padding-left: 2px;
+}
+
+.FormInput,input {
+	text-decoration: none;
+	font-family: Tahoma;
+	background: none;
+	FONT-SIZE: 12px;
+	height:20px;
+	background-color: white;
+	border: 1px solid #CFDFF5;
+	height: 16px;
+	color: #000;
+}
+
+.butts {
+	font-family: Tahoma;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	height: 20px;
+	text-align: center;
+	color: #ffe8c2;
+	background-color: #b74b05;
+	border: 1px solid #ffe8c2;
+}
+
+.SubmitButt {
+	border: none;
+	background: url(/MRSECTT/theme/submit-bg.png) no-repeat;
+	width: 100px;
+	height: 30px;
+	font-family: Tahoma;
+	color: #990033;
+	FONT-SIZE: 13px;
+	padding: 0px 0px 0px 0px;
+	text-align: center;
+	font-family: tahoma;
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#BtnSearch {
+	background: url(../images/Search1.png) no-repeat;
+	
+}
+
+#SubHdTabLft {
+	background: url(../images/sub-head-left-tab2.gif) no-repeat;
+	width: 7px;
+	height: 20px;
+}
+
+#SubHdTabRight {
+	background: url(../images/sub-head-rt-tab2.gif) no-repeat;
+	width: 7px;
+	height: 20px;
+}
+
+#SubHdCenTop {
+	background: url(../images/sub-head-cen-bg2.gif) repeat-x;
+	height: 20px;
+	color : #10315e;
+}
+
+#SubHdCenLft {
+	background: url(../images/sub-head-cen-left2.gif) repeat-y;
+	width: 7px;
+}
+
+#SubHdCenRight {
+	background: url(../images/sub-head-cen-rt2.gif) repeat-y;
+	width: 7px;
+}
+
+#SubHdBtmLft {
+	background: url(../images/sub-head-bttm-left2.gif) no-repeat;
+	width: 7px;
+	height: 10px;
+}
+
+#SubHdBtmRt {
+	background: url(../images/sub-head-bttm-rt2.gif) no-repeat;
+	width: 7px;
+	height: 10px;
+}
+
+#SubHdBtmCen {
+	background: url(../images/sub-head-bttm-cen2.gif) repeat-x;
+	height: 10px;
+}
+
+#SubHdTopRt{ background:url(../images/sub-head-top-rt2.gif) no-repeat; width:7px; height:10px;}
+#SubHdTopLft{ background:url(../images/sub-head-top-left2.gif) no-repeat; width:7px; height:10px;}
+#SubHdTopCen{
+	background:url(../images/sub-head-top-cen2.gif) repeat-x; height:10px;
+	color: #EE934F;
+}
+
+#Search{ background-color:#F2F3F1;}
+#TableBg{ background-color:#CFDFF5;}
+
+
+.TmsTitle{font-family: "Tahoma"; font-size:16px; color:#ff7300; margin:0px; padding:0px;}
+.TmsTitle .Hd{font-family: "Tahoma"; font-size:18px; color:#10315e; font-weight:bold;}
+
+.TableContent {
+	font-family: Tahoma;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	text-align: center;
+	color: #000000;
+}
+
+.TableSubContent {
+	font-family: Tahoma;
+	FONT-SIZE: 12px;
+	font-weight: bold;
+	text-align: center;
+	color: #676767;
+}
+
+.TabBorder {
+	border-top: 1px solid #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	display: block;
+}
+
+.TabBorder1 {
+	font-family: Tahoma;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	text-align: center;
+	color: #000000;
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	display: block;
+	padding: 0px 10px 0px 10px;
+}
+
+.TabBorder2 {
+	border-bottom: 1px solid #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	display: block;
+}
+
+.TableContent11 {
+	font-family: Tahoma;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	text-align: center;
+	color: #ce5800;
+	border-bottom: 1px solid #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	display: block;
+}
+
+.TableContent111 {
+	font-family: Tahoma;
+	FONT-SIZE: 13px;
+	font-weight: bold;
+	text-align: center;
+	color: #ce5800;
+	border-bottom: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	display: block;
+	height: 25px;
+}
+
+.upperCase{
+	text-transform: uppercase; 
+}
+
+.inactive{
+		color:#999;
+}	 
+	.active{
+		color:#000;
+}	 		
+.focused{
+		color:#000;
+		background:#fffee7;
+}
+.bototmDashed{
+		border-bottom:1px;
+		 
+		border-bottom-style:dashed; 
+		border-bottom-color: black;
+		
+}
+
+.bototmDashedth{
+		border-top:1px;
+		border-bottom:1px;
+		 
+		border-top-style:dashed; 
+		border-top-color: black;
+		border-bottom-style:dashed; 
+		border-bottom-color: black;
+		
+}
+.marquee{
+color: #ff7300;
+}
+.rfms{ font-family: "elephant","Trajan Pro",Verdana, Arial, Helvetica, sans-serif; font-size:25px; color:#E25E03;; font-weight:bold; text-align:left; padding:0px 0px 0px 12px;} 
+.rfmsSm{ font-family: "Myriad Pro", Verdana, Arial, Helvetica, sans-serif; font-size: 16px; color:#E25E03;;  text-align:left; padding:0px 0px 0px 12px;} 
+.toptext{ font-size:14px; color: #c61029; line-height:28px; padding:0px 0px 0px 7px; text-align:left;}
+.Butt{border: 1px solid #860305; background: url(/MRSECTT/images/button-bg2.jpg); width:72px; height:24px; display:block; text-align:center; font-family: "Myriad Pro",Verdana, Arial, Helvetica, sans-serif; color:#FFFFFF; font-size:16px;}
+.foot{  font-size: 11px; color:#E25E03;; line-height:18px; text-align:center;}
+.foot a{  font-size: 11px; color:#E25E03;; text-align:center; text-decoration:none;}
+.foot a:hover{  font-size: 11px; color:#E25E03;; text-align:center; text-decoration:underline;}
+.footleft{background:url(/MRSECTT/images/footer-left.jpg) no-repeat; width:19px; height:63px;}
+.footright{background:url(/MRSECTT/images/footer-right.jpg) no-repeat; width:20px; height:63px;}
+.footerbg{background:url(/MRSECTT/images/footer-bg.jpg); height:63px;}
+.footer{ font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; color:#E25E03;; line-height:18px; text-align:center;}
+.footer a{ font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; color:#E25E03;; text-align:center; text-decoration:none;}
+.footer a:hover{ font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; color:#E25E03; text-align:center; text-decoration:underline;}
+.themebgcol {background-color: #ff7300;;}
+.themebgcollogin {background-color: #f86807;}
+.appbg{background:url(/MRSECTT/images/app-bg2.gif) }
+.welcome{ font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; color:#ffffff; padding-left:6px; font-weight:bold;}
+.logintext{  font-size: 12px; color:#000000;  text-align:right; padding-right:6px;}
+.InputField{  border:none;  background:none;    color:#000000;   font-size:11px;   padding:0px 0px 0px 0px; width:158px}
+.loginhead{ font-family:"Myriad Pro", Verdana, Arial, Helvetica, sans-serif; font-size: 16px; color:#ffffff; padding-left:9px; text-align:left;}
