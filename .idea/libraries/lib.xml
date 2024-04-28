@@ -7,7 +7,6 @@
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/activation-1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/c3p0-0.9.1.1.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/commons-collections-2.1.1.jar!/" />
-      <root url="jar://$PROJECT_DIR$/WEB-INF/lib/ojdbc6.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/c3p0-0.9.5.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/slf4j-api-1.6.6.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/jai_core.jar!/" />
@@ -28,7 +27,8 @@
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-api-2.8.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/jai_codec-1.1.3-alpha.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-core-2.8.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../WebSphere/wlp/dev/api/spec/com.ibm.websphere.javaee.servlet.4.0_1.0.87.jar!/" />
+      <root url="jar://E:/TECH/wlp/dev/api/spec/com.ibm.websphere.javaee.servlet.4.0_1.0.87.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../../app/shush/product/21c/dbhomeXE/jdbc/lib/ojdbc8.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

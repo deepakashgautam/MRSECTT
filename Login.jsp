@@ -2,7 +2,7 @@
 
 <%@page import="in.org.cris.mrsectt.Beans.MstLogin"%>
 <%@page import="in.org.cris.mrsectt.util.StringFormat"%>
-<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+//<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -316,7 +316,7 @@ style="font-family: Verdana, Arial, Helvetica, sans-serif; margin:0px; padding:0
 
 
 
-<form name="loginForm" method="post" action="/MRSECTT/LoginController"
+<form name="loginForm" method="post" action="/MRSECTT_war_exploded/LoginController"
 
 	onsubmit="checkFormValidity">
 

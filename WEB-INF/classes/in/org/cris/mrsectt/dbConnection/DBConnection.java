@@ -1,11 +1,6 @@
 package in.org.cris.mrsectt.dbConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 import javax.naming.InitialContext;
@@ -17,7 +12,7 @@ public class DBConnection {
 		super();
 	}
 
-	private static DataSource dataSource; // DataSource object that will be used
+	//private static DataSource dataSource; // DataSource object that will be used
 	// used
 
 	// for SQL Connection.
@@ -32,30 +27,41 @@ public class DBConnection {
 
 	// execute all sql statement.
 
-	protected synchronized static void getDataSource() throws Exception {
-		if (dataSource == null) {
+//COMMENTING THE CODE WHICH WAS WRITTEN FOR JNDI SERVICE.
+//FROM HERE----->
+ protected synchronized static void getDataSource() throws Exception {
+		//if (dataSource == null) {
 			try {
 				InitialContext ctx = new InitialContext();
-				 //dataSource = (DataSource) ctx.lookup("jndi/wpms");
-				dataSource = (DataSource) ctx.lookup("jndi/mrsectt");
+				 //dataSource = (DataSource) ctx.lookup("jndi/wpms")
+				//-->// dataSource = (DataSource) ctx.lookup("jndi/mrsectt");
 				//dataSource = (DataSource) ctx.lookup("jndi/MRSECTT_local");
 				
 				//dataSource = (DataSource) ctx.lookup("jndi/mrsectt");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		//}
 	}
 
 	public synchronized Connection getDBConnection() throws Exception {
 		DataSource datasource = null;
 		Connection con = null;
 		try {
-			InitialContext ctx = new InitialContext();
+			String url = "jdbc:oracle:thin:@192.168.31.64:1521:XE"; // table details
+			String username = "SYSTEM"; // MySQL credentials
+			String password = "ROOT";
+
+			Class.forName("oracle.jdbc.OracleDriver"); // Driver name
+			con = DriverManager.getConnection(url, username, password);
+			System.out.println("Connection Established successfully");
+
+			/*InitialContext ctx = new InitialContext();
 			datasource = (DataSource) ctx.lookup("jndi/mrsectt");
 			//dataSource = (DataSource) ctx.lookup("jndi/MRSECTT_local");
 			//dataSource = (DataSource) ctx.lookup("jndi/mrsectt");
-			con = datasource.getConnection();
+			con = datasource.getConnection();*/
+
 		} catch (Exception e) {
 			//System.out.println("exception in before returning --"
 					//+ e.toString());
@@ -66,8 +72,8 @@ public class DBConnection {
 
 	public void openConnection() {
 		try {
-			getDataSource();
-			connection = dataSource.getConnection();
+			//getDataSource();
+			connection = getConnection();
 			connection.setAutoCommit(false);
 			statement = connection.createStatement();
 		} catch (Exception e) {
@@ -214,8 +220,16 @@ public class DBConnection {
 		return pstm;
 	}
 
-	public Connection getConnection() {
-		return connection;
+	public Connection getConnection() throws ClassNotFoundException, SQLException {
+		String url = "jdbc:oracle:thin:@localhost:1521:xe"; // table details
+		String username = "SYSTEM"; // MySQL credentials
+		String password = "ROOT";
+
+		Class.forName("oracle.jdbc.OracleDriver"); // Driver name
+		Connection con = DriverManager.getConnection(url, username, password);
+		System.out.println("Connection Established successfully");
+
+		return con;
 	}
 
 	public void setConnection(Connection connection) {
