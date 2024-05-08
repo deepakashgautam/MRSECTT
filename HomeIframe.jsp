@@ -27,7 +27,7 @@
 <body onload="resizeIframe();" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
 
 <script language="JavaScript1.2">
-<!--
+
 top.window.moveTo(0,0);
 if (document.all) {
 top.window.resizeTo(screen.availWidth,screen.availHeight);

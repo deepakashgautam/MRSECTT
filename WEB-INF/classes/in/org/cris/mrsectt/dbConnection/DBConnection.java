@@ -222,8 +222,8 @@ public class DBConnection {
 
 	public Connection getConnection() throws ClassNotFoundException, SQLException {
 		String url = "jdbc:oracle:thin:@localhost:1521:xe"; // table details
-		String username = "SYSTEM"; // MySQL credentials
-		String password = "ROOT";
+		String username = "MRSECTT"; // MySQL credentials
+		String password = "root";
 
 		Class.forName("oracle.jdbc.OracleDriver"); // Driver name
 		Connection con = DriverManager.getConnection(url, username, password);

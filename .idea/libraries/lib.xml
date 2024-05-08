@@ -27,8 +27,8 @@
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-api-2.8.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/jai_codec-1.1.3-alpha.jar!/" />
       <root url="jar://$PROJECT_DIR$/WEB-INF/lib/log4j-core-2.8.2.jar!/" />
-      <root url="jar://E:/TECH/wlp/dev/api/spec/com.ibm.websphere.javaee.servlet.4.0_1.0.87.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../../../app/shush/product/21c/dbhomeXE/jdbc/lib/ojdbc8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Tech/wlp-javaee8-24.0.0.3/wlp/dev/api/spec/com.ibm.websphere.javaee.servlet.4.0_1.0.87.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../oracle21c/dbhomeXE/jdbc/lib/ojdbc8.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
